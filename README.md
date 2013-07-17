@@ -3,9 +3,9 @@ Ziegler: an fMRI Reporting Webapp
 
 Ziegler is a lightweight Flask-based webapp for reporting the results of [lyman](https://github.com/mwaskom/lyman) analyses.
 
-To view the results from your default experiment, run
+To view the results from an experiment, run
 
-    python ziegler.py
+    python ziegler.py <experiment name>
 
 Which will start the app in `localhost:5000`
 
