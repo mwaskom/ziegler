@@ -1,0 +1,51 @@
+html {
+
+  height: 100%;
+  font-family: "Helvetica", sans-serif;
+
+  }
+
+body {
+
+  height: 100%;
+
+}
+
+div.selector {
+
+  width: 200px;
+  height: 100%;
+  position: fixed;
+  background: #ffffff;
+
+  }
+
+div.header {
+
+  height: 45px;
+  width: 200px;
+  text-align: center;
+  position: fixed;
+
+  }
+
+div.report {
+
+  text-align: left;
+  margin-left: 225px;
+  width: 800px;
+  height: 100%;
+
+  }
+
+select {
+
+  width: 100%;
+
+  }
+
+form#mainform {
+
+  margin-top: 80px;
+
+  }

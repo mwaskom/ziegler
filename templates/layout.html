@@ -1,0 +1,62 @@
+<!doctype html>
+<head>
+  <link rel=stylesheet type=text/css
+        href="{{ url_for('static', filename='style.css') }}">
+  <title>Ziegler</title>
+</head>
+<body>
+  <div class=documentwrapper>
+    <div class=selector>
+      <div class=header>
+          <h1>Ziegler</h1>
+      </div>
+      <form action={{ url_for('generate_report') }} method=post id=mainform>
+        <label for=subjects>Subjects</label><br>
+        <select multiple size="{{ selector_size }}" name=subjects>
+          {% for subj in all_subjects %}
+            <option value="{{ subj }}">{{ subj }}</option>
+          {% endfor %}
+        </select>
+        <br><br>
+        <label for=anatomy>Anatomical</label><br>
+        <select multiple name=anatomy>
+          <option value=anatwarp>FNIRT Normalization</option>
+        </select>
+        <br><br>
+        <label for=preproc>Preproc</label><br>
+        <select multiple name=preproc>
+          <option value=realign>Realignment Parameters</option>
+          <option value=mc_target>Motion Correction Target</option>
+          <option value=mean_func>Mean Functional</option>
+          <option value=coreg>Coregistration</option>
+        </select>
+        <br><br>
+        <label for=model>Timeseries Model</label><br>
+        <select multiple name=model>
+          <option value=design_mat>Design Matrix</option>
+          <option value=design_corr>Design Correlation</option>
+          <option value=residuals>Model Residuals</option>
+          <option value=zstats>Z-Stat Images</option>
+        </select>
+        <br><br>
+        <label for=ffx>Fixed Effects</label><br>
+        <select multiple name=ffx>
+          <option value=mask>Mask Overlap</option>
+          <option value=zstat>Z-Stat Image</option>
+        </select>
+        <br><br>
+        <label for=contrasts>Contrasts</label><br>
+        <select multiple size="{{ contrast_size }}" name=contrasts>
+          {% for contrast in all_contrasts %}
+            <option value="{{ contrast }}">{{ contrast }}</option>
+          {% endfor %}
+        </select>
+        <br><br>
+        <input type=submit value=Generate>
+      </form>
+    </div>
+    <div class=report>
+      {% block report %}{% endblock %}
+    </div>
+  </div>
+</body>

@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+{% block report %}
+  {% for subj in subjects %}
+    <h2>{{ subj }}</h2>
+
+    {% if anatomy %}
+      <h3>Anatomical Data</h3>
+    {% endif %}
+    {% if "anatwarp" in anatomy %}
+      <h4>FNIRT Normalization</h4>
+      <img src="/static/data/{{ subj }}/normalization/warp_report.png"><br>
+    {% endif %}
+
+    {% if preproc %}
+      <h3>Preprocessing</h3>
+      {% for run in runs %}
+        <h4>Run {{ run }}</h4>
+        {% if "mc_target" in preproc %}
+          <h5>Motion Correction Target</h3>
+          <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/example_func.png"><br>
+        {% endif %}
+        {% if "realign" in preproc %}
+          <h5>Realignment Parameters</h3>
+          <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/realignment_plots.png"><br>
+        {% endif %}
+        {% if "mean_func" in preproc %}
+          <h5>Mean Functional Volume</h3>
+          <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/mean_func.png"><br>
+        {% endif %}
+        {% if "coreg" in preproc %}
+          <h5>Anatomical Coregistration</h3>
+          <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/func2anat.png"><br>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    {% if model %}
+      <h3>Timeseries Model</h3>
+      {% for run in runs %}
+        <h4>Run {{ run }}</h4>
+        {% if "design_mat" in model %}
+          <h5>Design Matrix</h5>
+          <img src="/static/analysis/{{ subj }}/model/smoothed/run_{{ run }}/design.png"><br>
+        {% endif %}
+        {% if "design_corr" in model %}
+          <h5>Design Correlation</h5>
+          <img src="/static/analysis/{{ subj }}/model/smoothed/run_{{ run }}/design_correlation.png"><br>
+        {% endif %}
+        {% if "residuals" in model %}
+          <h5>Model Residuals</h5>
+          <img src="/static/analysis/{{ subj }}/model/smoothed/run_{{ run }}/sigmasquareds.png"><br>
+        {% endif %}
+        {% if "zstats" in model %}
+          <h5>Z-Stat Images</h5>
+          {% for contrast in contrasts %}
+            <h6>Contrast: {{ contrast }}</h6>
+            <img src="/static/analysis/{{ subj }}/model/smoothed/run_{{ run }}/zstat{{ loop.index }}.png"><br>
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    {% if ffx %}
+      <h3>Fixed Effects</h3>
+      {% for contrast in contrasts %}
+        <h4>Contrast: {{ contrast }}</h4>
+        {% if "mask" in ffx %}
+          <h5>Mask Overlap</h5>
+          <img src="/static/analysis/{{ subj }}/ffx/mni/smoothed/{{ contrast }}/mask_overlap.png"><br>
+        {% endif %}
+        {% if "zstat" in ffx %}
+          <h5>Z-Stat Image</h5>
+          <img src="/static/analysis/{{ subj }}/ffx/mni/smoothed/{{ contrast }}/zstat1.png"><br>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+  {% endfor %}
+{% endblock %}
