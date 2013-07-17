@@ -26,7 +26,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-
+    """Build the selector column."""
     info = subject_info()
     contrasts = [c[0] for c in exp["contrasts"]]
     info["all_contrasts"] = contrasts
@@ -37,7 +37,7 @@ def home():
 @app.route("/report", methods=["GET", "POST"])
 @app.route("/report/<subj>", methods=["GET", "POST"])
 def generate_report(subj=None):
-
+    """Build the main report."""
     info = subject_info()
     info["runs"] = range(1, exp["n_runs"] + 1)
 
@@ -66,7 +66,7 @@ def generate_report(subj=None):
 
 @app.template_filter("csv_to_html")
 def cluster_csv_to_html(csv_file):
-
+    """Read the csv file with peak information and generate an html table."""
     df = pd.read_csv(str(csv_file), index_col="Peak")
     df = df.reset_index()
     df["Peak"] += 1
@@ -79,7 +79,7 @@ def cluster_csv_to_html(csv_file):
 
 
 def subject_info():
-
+    """Gather information about the subjects from the lyman directory."""
     lyman_dir = os.environ["LYMAN_DIR"]
     subjects = np.loadtxt(op.join(lyman_dir, "subjects.txt"), str).tolist()
     selector_size = min(len(subjects), 20)
@@ -89,23 +89,29 @@ def subject_info():
                 exp=args.experiment)
 
 
+def link_source():
+    """Link source directories to static/."""
+    unlink_source()
+    os.symlink(op.join(project["analysis_dir"], args.experiment),
+               "static/analysis")
+    os.symlink(project["data_dir"], "static/data")
+
+
+def unlink_source():
+    """Remove source directories from static/, if they exist."""
+    if op.exists("static/data"):
+        os.unlink("static/data")
+    if op.exists("static/analysis"):
+        os.unlink("static/analysis")
+
+
 if __name__ == "__main__":
     try:
-        if op.exists("static/data"):
-            os.unlink("static/data")
-        if op.exists("static/analysis"):
-            os.unlink("static/analysis")
-        os.symlink(op.join(project["analysis_dir"], args.experiment),
-                   "static/analysis")
-        os.symlink(project["data_dir"], "static/data")
-
+        link_source()
         host = None
         if args.external:
             host = "0.0.0.0"
             args.debug = False
         app.run(host=host, debug=args.debug, port=args.port)
     finally:
-        if op.exists("static/data"):
-            os.unlink("static/data")
-        if op.exists("static/analysis"):
-            os.unlink("static/analysis")
+        unlink_source()

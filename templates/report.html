@@ -93,7 +93,7 @@
       <img src="/static/analysis/group/mni/{{ contrast }}/zstat1_threshold_overlay.png"><br>
     {% endif %}
     {% if "peaks" in group %}
-      <h4>Activation Foci</h4>
+      <h4>Activation Peaks</h4>
       {% filter csv_to_html %}static/analysis/group/mni/{{ contrast }}/zstat1_localmax.csv{% endfilter %}
     {% endif %}<br>
     {% if "boxplot" in group %}
