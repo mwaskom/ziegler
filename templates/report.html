@@ -27,6 +27,10 @@
           <h5>Mean Functional Volume</h3>
           <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/mean_func.png"><br>
         {% endif %}
+        {% if "art" in preproc %}
+          <h5>Mean Timeseries</h3>
+          <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/intensity_plot.png"><br>
+        {% endif %}
         {% if "coreg" in preproc %}
           <h5>Anatomical Coregistration</h3>
           <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/func2anat.png"><br>

@@ -12,7 +12,7 @@
       </div>
       <form action={{ url_for('generate_report') }} method=post id=mainform>
         <label for=subjects>Subjects</label><br>
-        <select multiple size="{{ selector_size }}" name=subjects>
+        <select multiple size={{ selector_size }} name=subjects>
           {% for subj in all_subjects %}
             <option value="{{ subj }}">{{ subj }}</option>
           {% endfor %}
@@ -24,10 +24,11 @@
         </select>
         <br><br>
         <label for=preproc>Preproc</label><br>
-        <select multiple name=preproc>
+        <select multiple size=5 name=preproc>
           <option value=realign>Realignment Parameters</option>
           <option value=mc_target>Motion Correction Target</option>
           <option value=mean_func>Mean Functional</option>
+          <option value=art>Mean Timeseries</option>
           <option value=coreg>Coregistration</option>
         </select>
         <br><br>
@@ -46,7 +47,7 @@
         </select>
         <br><br>
         <label for=contrasts>Contrasts</label><br>
-        <select multiple size="{{ contrast_size }}" name=contrasts>
+        <select multiple size={{ contrast_size }} name=contrasts>
           {% for contrast in all_contrasts %}
             <option value="{{ contrast }}">{{ contrast }}</option>
           {% endfor %}

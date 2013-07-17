@@ -8,8 +8,6 @@ from flask import Flask, request, render_template
 
 from lyman import gather_project_info, gather_experiment_info
 
-app = Flask(__name__)
-
 parser = argparse.ArgumentParser()
 parser.add_argument("experiment")
 parser.add_argument("-debug", action="store_true")
@@ -20,6 +18,8 @@ project = gather_project_info()
 if args.experiment is None:
     args.experiment = project["default_exp"]
 exp = gather_experiment_info(args.experiment)
+
+app = Flask(__name__)
 
 
 @app.route("/")
@@ -51,7 +51,7 @@ def generate_report(subj=None):
     else:
         info["subjects"] = [] if subj is None else [subj]
         info["anatomy"] = ["anatwarp"]
-        info["preproc"] = ["realign", "mc_target", "mean_func", "coreg"]
+        info["preproc"] = ["realign", "mc_target", "mean_func", "art", "coreg"]
         info["model"] = ["design_mat", "design_corr", "residuals", "zstats"]
         info["ffx"] = ["mask", "zstat"]
         info["contrasts"] = info["all_contrasts"]
