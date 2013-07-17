@@ -12,6 +12,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("experiment")
 parser.add_argument("-debug", action="store_true")
 parser.add_argument("-port", type=int, default=5000)
+parser.add_argument("-external", action="store_true")
 args = parser.parse_args(sys.argv[1:])
 
 project = gather_project_info()
@@ -82,7 +83,12 @@ if __name__ == "__main__":
         os.symlink(op.join(project["analysis_dir"], args.experiment),
                    "static/analysis")
         os.symlink(project["data_dir"], "static/data")
-        app.run(debug=args.debug, port=args.port)
+
+        host = None
+        if args.external:
+            host = "0.0.0.0"
+            args.debug = False
+        app.run(host=host, debug=args.debug, port=args.port)
     finally:
         if op.exists("static/data"):
             os.unlink("static/data")
