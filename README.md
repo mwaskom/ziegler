@@ -1,15 +1,17 @@
-Ziegler: an fMRI Reporting Webapp
-=================================
+Ziegler: fMRI Reporting Webapp
+==============================
 
-Ziegler is a lightweight Flask-based webapp for reporting the results of [lyman](https://github.com/mwaskom/lyman) analyses.
+Ziegler is a lightweight [Flask](http://flask.pocoo.org/) based webapp for reporting the results of [lyman](https://github.com/mwaskom/lyman) analyses.
 
 To view the results from an experiment, run
 
     python ziegler.py <experiment name>
 
-Which will start the app in `localhost:5000`
+which will start the app at `http://localhost:5000`.
 
-At the moment, the lyman data/ and analysis/ directories get softlinked in static/ when the app starts. This gets cleaned up on exit, but you might not want to keep the app in a Dropbox or similar folder, as it will try to sync what can be very large directories.
+There are a few other options; run with `--help` to see them.
+
+At the moment, the lyman `data/` and `analysis/` directories are softlinked in `static/` when the app starts. This is cleaned up on exit, but you might not want to keep the app in your Dropbox, as these large directories will be synced.
 
 Dependencies
 ------------
