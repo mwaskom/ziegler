@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <link rel="stylesheet" media="screen"
+          href="{{ url_for('static', filename='bootstrap.min.css') }}">
     <link rel=stylesheet type=text/css
           href="{{ url_for('static', filename='style.css') }}">
     <title>Ziegler</title>
@@ -12,19 +14,19 @@
             <h1>Ziegler</h1>
         </div>
         <form action={{ url_for('generate_report') }} method=post id=mainform>
-          <label for=subjects>Subjects</label><br>
+          <label for=subjects>Subjects</label>
           <select multiple size={{ selector_size }} name=subjects>
             {% for subj in all_subjects %}
               <option value="{{ subj }}">{{ subj }}</option>
             {% endfor %}
           </select>
           <br><br>
-          <label for=anatomy>Anatomical</label><br>
+          <label for=anatomy>Anatomical</label>
           <select multiple name=anatomy>
             <option value=anatwarp>FNIRT Normalization</option>
           </select>
           <br><br>
-          <label for=preproc>Preproc</label><br>
+          <label for=preproc>Preproc</label>
           <select multiple size=5 name=preproc>
             <option value=realign>Realignment Parameters</option>
             <option value=mc_target>Motion Correction Target</option>
@@ -33,7 +35,7 @@
             <option value=coreg>Coregistration</option>
           </select>
           <br><br>
-          <label for=model>Timeseries Model</label><br>
+          <label for=model>Timeseries Model</label>
           <select multiple name=model>
             <option value=design_mat>Design Matrix</option>
             <option value=design_corr>Design Correlation</option>
@@ -41,26 +43,28 @@
             <option value=zstats>Z-Stat Images</option>
           </select>
           <br><br>
-          <label for=ffx>Fixed Effects</label><br>
+          <label for=ffx>Fixed Effects</label>
           <select multiple name=ffx>
             <option value=mask>Mask Overlap</option>
             <option value=zstat>Z-Stat Image</option>
           </select>
           <br><br>
-          <label for=group>Group Analyses</label><br>
+          <label for=group>Group Analyses</label>
           <select multiple name=group>
             <option value=mask>Group Mask</option>
             <option value=zstat>Z-Stat Image</option>
           </select>
           <br><br>
-          <label for=contrasts>Contrasts</label><br>
+          <label for=contrasts>Contrasts</label>
           <select multiple size={{ contrast_size }} name=contrasts>
             {% for contrast in all_contrasts %}
               <option value="{{ contrast }}">{{ contrast }}</option>
             {% endfor %}
           </select>
           <br><br>
-          <input type=submit value=Generate>
+          <div class="submit-gen">
+            <input class="btn-block btn-primary" type=submit value=Generate>
+          </div>
         </form>
       </div>
       <div class=report>
