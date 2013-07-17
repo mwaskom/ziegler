@@ -1,5 +1,5 @@
-fMRI Reporting Webapp
-=====================
+Ziegler: an fMRI Reporting Webapp
+=================================
 
 Ziegler is a lightweight Flask-based webapp for reporting the results of [lyman](https://github.com/mwaskom/lyman) analyses.
 
