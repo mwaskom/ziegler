@@ -39,7 +39,9 @@ def generate_report(subj=None):
     info = subject_info()
     info["runs"] = range(1, exp["n_runs"] + 1)
 
-    info["all_contrasts"] = [c[0] for c in exp["contrasts"]]
+    contrasts = [c[0] for c in exp["contrasts"]]
+    info["all_contrasts"] = contrasts
+    info["contrast_size"] = len(contrasts)
 
     if request.method == "POST":
         info["subjects"] = request.form.getlist("subjects")
@@ -47,6 +49,7 @@ def generate_report(subj=None):
         info["preproc"] = request.form.getlist("preproc")
         info["model"] = request.form.getlist("model")
         info["ffx"] = request.form.getlist("ffx")
+        info["group"] = request.form.getlist("group")
         info["contrasts"] = request.form.getlist("contrasts")
     else:
         info["subjects"] = [] if subj is None else [subj]

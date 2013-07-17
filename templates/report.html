@@ -80,4 +80,18 @@
     {% endif %}
 
   {% endfor %}
+{% if group %}
+  <h2>Group Analysis</h2>
+  {% for contrast in contrasts %}
+    <h3>Contrast: {{ contrast }}</h3>
+    {% if "mask" in group %}
+      <h4>Group Mask</h4>
+      <img src="/static/analysis/group/mni/{{ contrast }}/pos_variance.png"><br>
+    {% endif %}
+    {% if "zstat" in group %}
+      <h4>Z-Stat Image<h4>
+      <img src="/static/analysis/group/mni/{{ contrast }}/zstat1_threshold_overlay.png"><br>
+    {% endif %}
+  {% endfor %}
+{% endif %}
 {% endblock %}

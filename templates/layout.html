@@ -47,6 +47,12 @@
             <option value=zstat>Z-Stat Image</option>
           </select>
           <br><br>
+          <label for=group>Group Analyses</label><br>
+          <select multiple name=group>
+            <option value=mask>Group Mask</option>
+            <option value=zstat>Z-Stat Image</option>
+          </select>
+          <br><br>
           <label for=contrasts>Contrasts</label><br>
           <select multiple size={{ contrast_size }} name=contrasts>
             {% for contrast in all_contrasts %}
