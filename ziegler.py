@@ -9,16 +9,16 @@ from flask import Flask, request, render_template
 
 from lyman import gather_project_info, gather_experiment_info
 
+project = gather_project_info()
+default_exp = project["default_exp"]
+
 parser = argparse.ArgumentParser()
-parser.add_argument("experiment")
-parser.add_argument("-debug", action="store_true")
+parser.add_argument("-experiment", default=default_exp)
 parser.add_argument("-port", type=int, default=5000)
 parser.add_argument("-external", action="store_true")
+parser.add_argument("-debug", action="store_true")
 args = parser.parse_args(sys.argv[1:])
 
-project = gather_project_info()
-if args.experiment is None:
-    args.experiment = project["default_exp"]
 exp = gather_experiment_info(args.experiment)
 
 app = Flask(__name__)
