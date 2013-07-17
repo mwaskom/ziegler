@@ -92,6 +92,14 @@
       <h4>Z-Stat Image<h4>
       <img src="/static/analysis/group/mni/{{ contrast }}/zstat1_threshold_overlay.png"><br>
     {% endif %}
+    {% if "peaks" in group %}
+      <h4>Activation Foci</h4>
+      {% filter csv_to_html %}static/analysis/group/mni/{{ contrast }}/zstat1_localmax.csv{% endfilter %}
+    {% endif %}<br>
+    {% if "boxplot" in group %}
+      <h4>COPE Distributions<h4>
+      <img src="/static/analysis/group/mni/{{ contrast }}/peak_boxplot.png"><br>
+    {% endif %}
   {% endfor %}
 {% endif %}
 {% endblock %}

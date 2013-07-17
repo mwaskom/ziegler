@@ -3,6 +3,7 @@ import sys
 import os.path as op
 import argparse
 import numpy as np
+import pandas as pd
 
 from flask import Flask, request, render_template
 
@@ -61,6 +62,20 @@ def generate_report(subj=None):
         info["contrasts"] = info["all_contrasts"]
 
     return render_template("report.html", **info)
+
+
+@app.template_filter("csv_to_html")
+def cluster_csv_to_html(csv_file):
+
+    df = pd.read_csv(str(csv_file), index_col="Peak")
+    df = df.reset_index()
+    df["Peak"] += 1
+    html = df.to_html(index=False, classes=["table",
+                                            "table-striped",
+                                            "table-condensed"])
+    html = html.replace('border="1"', '')
+    html = html.replace('class="dataframe ', 'class="')
+    return html
 
 
 def subject_info():
