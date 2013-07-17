@@ -15,7 +15,7 @@ div.selector {
 
   width: 200px;
   height: 100%;
-  position: fixed;
+  position: absolute;
   background: #ffffff;
 
   }
@@ -25,14 +25,16 @@ div.header {
   height: 45px;
   width: 200px;
   text-align: center;
-  position: fixed;
+  position: absolute;
 
   }
 
 div.report {
 
   text-align: left;
+  margin-top: 5px;
   margin-left: 225px;
+  position: absolute;
   width: 800px;
   height: 100%;
 
