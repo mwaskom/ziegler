@@ -52,9 +52,9 @@ def home():
 
 
 @app.route("/report", methods=["GET", "POST"])
-@app.route("/report/<subj>", methods=["GET", "POST"])
-@app.route("/report/<subj>/<space>", methods=["GET", "POST"])
-def generate_report(subj=None, space=None):
+@app.route("/report/<arg1>", methods=["GET", "POST"])
+@app.route("/report/<arg1>/<arg2>", methods=["GET", "POST"])
+def generate_report(arg1=None, arg2=None):
     """Build the main report."""
     info = basic_info()
 
@@ -68,13 +68,20 @@ def generate_report(subj=None, space=None):
         info["group"] = request.form.getlist("group")
         info["contrasts"] = request.form.getlist("contrasts")
     else:
-        info["subjects"] = [] if subj is None else [subj]
-        info["anatomy"] = ["anatwarp"]
-        info["preproc"] = ["realign", "mc_target", "mean_func", "art", "coreg"]
-        info["model"] = ["design_mat", "design_corr", "residuals", "zstats"]
-        info["ffx"] = ["mask", "zstat"]
-        info["space"] = "mni" if space is None else space
-        info["contrasts"] = info["all_contrasts"]
+        if arg1 == "group":
+            info["group"] = ["mask", "zstat", "peaks", "boxplot"]
+            info["space"] = "mni"
+            info["contrasts"] = (info["all_contrasts"] if arg2 is None
+                                 else [arg2])
+        else:
+            info["subjects"] = [] if arg1 is None else [arg1]
+            info["anatomy"] = ["anatwarp"]
+            info["preproc"] = ["realign", "mc_target", "mean_func",
+                               "art", "coreg"]
+            info["model"] = ["design_mat", "design_corr", "residuals", "zstats"]
+            info["ffx"] = ["mask", "zstat"]
+            info["space"] = "mni" if arg2 is None else arg2
+            info["contrasts"] = info["all_contrasts"]
 
     return render_template("report.html", **info)
 
