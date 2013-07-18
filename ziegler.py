@@ -53,17 +53,18 @@ def home():
 
 @app.route("/report", methods=["GET", "POST"])
 @app.route("/report/<subj>", methods=["GET", "POST"])
-def generate_report(subj=None):
+@app.route("/report/<subj>/<space>", methods=["GET", "POST"])
+def generate_report(subj=None, space=None):
     """Build the main report."""
     info = basic_info()
 
-    info["space"] = request.form["space"]
     if request.method == "POST":
         info["subjects"] = request.form.getlist("subjects")
         info["anatomy"] = request.form.getlist("anatomy")
         info["preproc"] = request.form.getlist("preproc")
         info["model"] = request.form.getlist("model")
         info["ffx"] = request.form.getlist("ffx")
+        info["space"] = request.form["space"]
         info["group"] = request.form.getlist("group")
         info["contrasts"] = request.form.getlist("contrasts")
     else:
@@ -72,6 +73,7 @@ def generate_report(subj=None):
         info["preproc"] = ["realign", "mc_target", "mean_func", "art", "coreg"]
         info["model"] = ["design_mat", "design_corr", "residuals", "zstats"]
         info["ffx"] = ["mask", "zstat"]
+        info["space"] = "mni" if space is None else space
         info["contrasts"] = info["all_contrasts"]
 
     return render_template("report.html", **info)
