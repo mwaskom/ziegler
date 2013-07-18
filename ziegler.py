@@ -29,7 +29,7 @@ def basic_info():
     lyman_dir = os.environ["LYMAN_DIR"]
 
     subjects = np.loadtxt(op.join(lyman_dir, "subjects.txt"), str).tolist()
-    selector_size = min(len(subjects), 20)
+    selector_size = min(len(subjects), 10)
 
     runs = range(1, exp["n_runs"] + 1)
 
@@ -57,6 +57,7 @@ def generate_report(subj=None):
     """Build the main report."""
     info = basic_info()
 
+    info["space"] = request.form["space"]
     if request.method == "POST":
         info["subjects"] = request.form.getlist("subjects")
         info["anatomy"] = request.form.getlist("anatomy")

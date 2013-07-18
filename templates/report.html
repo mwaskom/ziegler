@@ -70,11 +70,11 @@
         <h4>Contrast: {{ contrast }}</h4>
         {% if "mask" in ffx %}
           <h5>Mask Overlap</h5>
-          <img src="/static/analysis/{{ subj }}/ffx/mni/smoothed/{{ contrast }}/mask_overlap.png"><br>
+          <img src="/static/analysis/{{ subj }}/ffx/{{ space }}/smoothed/{{ contrast }}/mask_overlap.png"><br>
         {% endif %}
         {% if "zstat" in ffx %}
           <h5>Z-Stat Image</h5>
-          <img src="/static/analysis/{{ subj }}/ffx/mni/smoothed/{{ contrast }}/zstat1.png"><br>
+          <img src="/static/analysis/{{ subj }}/ffx/{{ space }}/smoothed/{{ contrast }}/zstat1.png"><br>
         {% endif %}
       {% endfor %}
     {% endif %}
@@ -86,19 +86,19 @@
     <h3>Contrast: {{ contrast }}</h3>
     {% if "mask" in group %}
       <h4>Group Mask</h4>
-      <img src="/static/analysis/group/mni/{{ contrast }}/pos_variance.png"><br>
+      <img src="/static/analysis/group/{{ space }}/{{ contrast }}/pos_variance.png"><br>
     {% endif %}
     {% if "zstat" in group %}
       <h4>Z-Stat Image<h4>
-      <img src="/static/analysis/group/mni/{{ contrast }}/zstat1_threshold_overlay.png"><br>
+      <img src="/static/analysis/group/{{ space }}/{{ contrast }}/zstat1_threshold_overlay.png"><br>
     {% endif %}
     {% if "peaks" in group %}
       <h4>Activation Peaks</h4>
-      {% filter csv_to_html %}static/analysis/group/mni/{{ contrast }}/zstat1_localmax.csv{% endfilter %}
+      {% filter csv_to_html %}static/analysis/group/{{ space }}/{{ contrast }}/zstat1_localmax.csv{% endfilter %}
     {% endif %}<br>
     {% if "boxplot" in group %}
       <h4>COPE Distributions<h4>
-      <img src="/static/analysis/group/mni/{{ contrast }}/peak_boxplot.png"><br>
+      <img src="/static/analysis/group/{{ space }}/{{ contrast }}/peak_boxplot.png"><br>
     {% endif %}
   {% endfor %}
 {% endif %}
