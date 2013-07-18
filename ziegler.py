@@ -24,13 +24,30 @@ exp = gather_experiment_info(args.experiment)
 app = Flask(__name__)
 
 
+def basic_info():
+    """Basic information needed before any report options are set."""
+    lyman_dir = os.environ["LYMAN_DIR"]
+
+    subjects = np.loadtxt(op.join(lyman_dir, "subjects.txt"), str).tolist()
+    selector_size = min(len(subjects), 20)
+
+    runs = range(1, exp["n_runs"] + 1)
+
+    contrasts = [c[0] for c in exp["contrasts"]]
+    contrast_size = len(contrasts)
+
+    return dict(all_subjects=subjects,
+                selector_size=selector_size,
+                experiment=args.experiment,
+                runs=runs,
+                all_contrasts=contrasts,
+                contrast_size=contrast_size)
+
+
 @app.route("/")
 def home():
     """Build the selector column."""
-    info = subject_info()
-    contrasts = [c[0] for c in exp["contrasts"]]
-    info["all_contrasts"] = contrasts
-    info["contrast_size"] = len(contrasts)
+    info = basic_info()
     return render_template("layout.html", **info)
 
 
@@ -38,12 +55,7 @@ def home():
 @app.route("/report/<subj>", methods=["GET", "POST"])
 def generate_report(subj=None):
     """Build the main report."""
-    info = subject_info()
-    info["runs"] = range(1, exp["n_runs"] + 1)
-
-    contrasts = [c[0] for c in exp["contrasts"]]
-    info["all_contrasts"] = contrasts
-    info["contrast_size"] = len(contrasts)
+    info = basic_info()
 
     if request.method == "POST":
         info["subjects"] = request.form.getlist("subjects")
@@ -76,17 +88,6 @@ def cluster_csv_to_html(csv_file):
     html = html.replace('border="1"', '')
     html = html.replace('class="dataframe ', 'class="')
     return html
-
-
-def subject_info():
-    """Gather information about the subjects from the lyman directory."""
-    lyman_dir = os.environ["LYMAN_DIR"]
-    subjects = np.loadtxt(op.join(lyman_dir, "subjects.txt"), str).tolist()
-    selector_size = min(len(subjects), 20)
-
-    return dict(all_subjects=subjects,
-                selector_size=selector_size,
-                exp=args.experiment)
 
 
 def link_source():

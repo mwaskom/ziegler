@@ -12,6 +12,7 @@
       <div class=selector>
         <div class=header>
             <h1>Ziegler</h1>
+            <p>Experiment: {{ experiment }}</p>
         </div>
         <form action={{ url_for('generate_report') }} method=post id=mainform>
           <label for=subjects>Subjects</label>
