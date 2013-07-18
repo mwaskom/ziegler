@@ -13,6 +13,18 @@ There are a few other options; run with `--help` to see them.
 
 At the moment, the lyman `data/` and `analysis/` directories are softlinked in `static/` when the app starts. This is cleaned up on exit, but you might not want to keep the app in your Dropbox, as these large directories will be synced.
 
+In addition to the report generation form, you can also create reports by specifying a url. To generate a full report for a given subject, point your browser to
+
+    http://{app address}/<subj>/<space>
+
+The mni space is used by default if it is missing. You can also create a report for a group analysis in this way. To show all group contrasts, use
+
+    http://{app address}/group
+
+but you can also show a specific contrast with
+
+    http://{app address}/group/<contrast>
+
 Dependencies
 ------------
 - [Flask](http://flask.pocoo.org/)
