@@ -3,16 +3,9 @@
   {% for subj in subjects %}
     <h2>{{ subj }}</h2>
 
-    {% if anatomy %}
-      <h3>Anatomical Data</h3>
-    {% endif %}
-    {% if "anatwarp" in anatomy %}
-      <h4>FNIRT Normalization</h4>
-      <img src="/static/data/{{ subj }}/normalization/warp_report.png"><br>
-    {% endif %}
-
     {% if preproc %}
       <h3>Preprocessing</h3>
+
       {% for run in runs %}
         <h4>Run {{ run }}</h4>
         {% if "mc_target" in preproc %}
@@ -28,7 +21,7 @@
           <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/mean_func.png"><br>
         {% endif %}
         {% if "art" in preproc %}
-          <h5>Mean Timeseries</h3>
+          <h5>Artifact Detection</h3>
           <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/intensity_plot.png"><br>
         {% endif %}
         {% if "coreg" in preproc %}
@@ -36,6 +29,12 @@
           <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/func2anat.png" width=872px><br>
         {% endif %}
       {% endfor %}
+
+      {% if "anatwarp" in preproc %}
+        <h4>Normalization</h4>
+        <img src="/static/data/{{ subj }}/normalization/warp_report.png"><br>
+      {% endif %}
+
     {% endif %}
 
     {% if model %}

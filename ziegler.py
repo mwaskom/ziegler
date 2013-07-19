@@ -91,9 +91,8 @@ def generate_report(arg1=None, arg2=None):
         # Populate info for a subject report
         elif arg1 is not None:
             info["subjects"] = [] if arg1 is None else [arg1]
-            info["anatomy"] = ["anatwarp"]
             info["preproc"] = ["realign", "mc_target", "mean_func",
-                               "art", "coreg"]
+                               "art", "coreg", "anatwarp"]
             info["model"] = ["design_mat", "design_corr",
                              "residuals", "zstats"]
             info["ffx"] = ["mask", "zstat"]
@@ -127,8 +126,8 @@ def cluster_csv_to_html(csv_file):
 
 def request_to_info(req, info):
     """Given a request multidict, populate the info dict."""
-    for key in ["subjects", "anatomy", "preproc", "model",
-                "ffx", "group", "contrasts"]:
+    keys = ["subjects", "preproc", "model", "ffx", "group", "contrasts"]
+    for key in keys:
         info[key] = req.getlist(key)
     info["space"] = req.get("space", "")
     groupname = req.get("groupname", "group")
