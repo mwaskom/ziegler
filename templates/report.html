@@ -88,21 +88,21 @@
     {% if "mask" in group %}
       {% if loop.first %}
         <h4>Group Mask</h4>
-        <img src="/static/analysis/group/{{ space }}/{{ contrast }}/pos_variance.png"><br>
+        <img src="/static/analysis/{{ groupname }}/{{ space }}/{{ contrast }}/pos_variance.png"><br>
       {% endif %}
     <h3>Contrast: {{ contrast }}</h3>
     {% endif %}
     {% if "zstat" in group %}
       <h4>Z-Stat Image<h4>
-      <img src="/static/analysis/group/{{ space }}/{{ contrast }}/zstat1_threshold_overlay.png"><br>
+      <img src="/static/analysis/{{ groupname }}/{{ space }}/{{ contrast }}/zstat1_threshold_overlay.png"><br>
     {% endif %}
     {% if "peaks" in group %}
       <h4>Activation Peaks</h4>
-      {% filter csv_to_html %}static/analysis/group/{{ space }}/{{ contrast }}/zstat1_localmax.csv{% endfilter %}
+      {% filter csv_to_html %}static/analysis/{{ groupname }}/{{ space }}/{{ contrast }}/zstat1_localmax.csv{% endfilter %}
     {% endif %}<br>
     {% if "boxplot" in group %}
       <h4>COPE Distributions<h4>
-      <img src="/static/analysis/group/{{ space }}/{{ contrast }}/peak_boxplot.png"><br>
+      <img src="/static/analysis/{{ groupname }}/{{ space }}/{{ contrast }}/peak_boxplot.png"><br>
     {% endif %}
   {% endfor %}
 {% endif %}

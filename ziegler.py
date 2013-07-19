@@ -61,13 +61,16 @@ def generate_report(arg1=None, arg2=None):
     if request.method == "POST":
 
         # Possibly generate a url for the report
-        if request.form.get("btn", "") == "Generate With Link":
+        form = request.form
+        if form.get("btn", "") == "Generate With Link":
             url = request.url + "?"
-            args = ["=".join([k, v]) for k, v in request.form.iteritems()
+            args = ["=".join([k, v]) for k, v in form.iteritems()
                     if k != "btn"
                     and not (k == "space"
-                             and not (request.form.getlist("ffx")
-                                      or request.form.getlist("group")))]
+                             and not (form.getlist("ffx")
+                                      or form.getlist("group")))
+                    and not (k == "groupname" and not form.getlist("group"))]
+
             url += "&".join(args)
             info["report_url"] = unicode(url)
 
@@ -124,6 +127,8 @@ def request_to_info(req, info):
                 "ffx", "group", "contrasts"]:
         info[key] = req.getlist(key)
     info["space"] = req.get("space", "")
+    groupname = req.get("groupname", "group")
+    info["groupname"] = groupname if groupname else "group"
 
     return info
 

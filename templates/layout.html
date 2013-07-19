@@ -64,6 +64,8 @@
             <option value=peaks>Activation Peaks</option>
             <option value=boxplot>COPE Distributions</option>
           </select>
+          <input type="text" name="groupname" class=input-block-level
+                 placeholder="group analysis output name">
           <legend>Contrasts</legend>
           <select multiple="multiple" size={{ contrast_size }} name=contrasts>
             {% for contrast in all_contrasts %}
