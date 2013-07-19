@@ -11,77 +11,80 @@
 
   <body>
     <div class=documentwrapper>
-      <div class=selector>
-        <div class=header>
-            <h1>Ziegler</h1>
-            <p>Experiment: {{ experiment }}</p>
-        </div>
-
-        <form action={{ url_for('generate_report') }} method=post id=mainform>
-          <legend>Subjects</legend>
-          <select multiple="multiple" size={{ selector_size }} name=subjects>
-            {% for subj in all_subjects %}
-              <option value="{{ subj }}">{{ subj }}</option>
-            {% endfor %}
-          </select>
-
-          <legend>Preprocessing</legend>
-          <select multiple="multiple" size=6 name=preproc>
-            <option value=realign>Realignment Parameters</option>
-            <option value=mc_target>Motion Correction Target</option>
-            <option value=mean_func>Mean Functional Volume</option>
-            <option value=art>Artifact Detection</option>
-            <option value=coreg>Coregistration</option>
-            <option value=anatwarp>Normalization</option>
-          </select>
-
-          <legend>Timeseries Model</legend>
-          <select multiple="multiple" name=model>
-            <option value=design_mat>Design Matrix</option>
-            <option value=design_corr>Design Correlation</option>
-            <option value=residuals>Model Residuals</option>
-            <option value=zstats>Z-Stat Images</option>
-          </select>
-
-          <legend>Fixed Effects</legend>
-          <select multiple="multiple" name=ffx>
-            <option value=mask>Mask Overlap</option>
-            <option value=zstat>Z-Stat Image</option>
-          </select>
-          <fieldset>
-            <label class="radio inline">
-              <input type="radio" name="space" value="mni" checked>
-              MNI
-              </label>
-            <label class="radio inline">
-              <input type="radio" name="space" value="epi">
-              EPI
-            </label>
-          </fieldset>
-          <br>
-
-          <legend>Group Analyses</legend>
-          <select multiple="multiple" name=group>
-            <option value=mask>Group Mask</option>
-            <option value=zstat>Z-Stat Image</option>
-            <option value=peaks>Activation Peaks</option>
-            <option value=boxplot>COPE Distributions</option>
-          </select>
-          <input type="text" name="groupname" class=input-block-level
-                 placeholder="group analysis output name">
-
-          <legend>Contrasts</legend>
-          <select multiple="multiple" size={{ contrast_size }} name=contrasts>
-            {% for contrast in all_contrasts %}
-              <option value="{{ contrast }}">{{ contrast }}</option>
-            {% endfor %}
-          </select>
-          <div class="submit-gen">
-            <input class="btn-block btn-primary" type=submit name=btn value="Generate Report">
-            <input class="btn-block" type=submit name=btn value="Generate With Link">
+      {% if not reportonly %}
+        <div class=selector>
+          <div class=header>
+              <h1>Ziegler</h1>
+              <p>Experiment: {{ experiment }}</p>
           </div>
-        </form>
-      </div>
+
+          <form action={{ url_for('generate_report') }} method=post id=mainform>
+            <legend>Subjects</legend>
+            <select multiple="multiple" size={{ selector_size }} name=subjects>
+              {% for subj in all_subjects %}
+                <option value="{{ subj }}">{{ subj }}</option>
+              {% endfor %}
+            </select>
+
+            <legend>Preprocessing</legend>
+            <select multiple="multiple" size=6 name=preproc>
+              <option value=realign>Realignment Parameters</option>
+              <option value=mc_target>Motion Correction Target</option>
+              <option value=mean_func>Mean Functional Volume</option>
+              <option value=art>Artifact Detection</option>
+              <option value=coreg>Coregistration</option>
+              <option value=anatwarp>Normalization</option>
+            </select>
+
+            <legend>Timeseries Model</legend>
+            <select multiple="multiple" name=model>
+              <option value=design_mat>Design Matrix</option>
+              <option value=design_corr>Design Correlation</option>
+              <option value=residuals>Model Residuals</option>
+              <option value=zstats>Z-Stat Images</option>
+            </select>
+
+            <legend>Fixed Effects</legend>
+            <select multiple="multiple" name=ffx>
+              <option value=mask>Mask Overlap</option>
+              <option value=zstat>Z-Stat Image</option>
+            </select>
+            <fieldset>
+              <label class="radio inline">
+                <input type="radio" name="space" value="mni" checked>
+                MNI
+                </label>
+              <label class="radio inline">
+                <input type="radio" name="space" value="epi">
+                EPI
+              </label>
+            </fieldset>
+            <br>
+
+            <legend>Group Analyses</legend>
+            <select multiple="multiple" name=group>
+              <option value=mask>Group Mask</option>
+              <option value=zstat>Z-Stat Image</option>
+              <option value=peaks>Activation Peaks</option>
+              <option value=boxplot>COPE Distributions</option>
+            </select>
+            <input type="text" name="groupname" class=input-block-level
+                   placeholder="group analysis output name">
+
+            <legend>Contrasts</legend>
+            <select multiple="multiple" size={{ contrast_size }} name=contrasts>
+              {% for contrast in all_contrasts %}
+                <option value="{{ contrast }}">{{ contrast }}</option>
+              {% endfor %}
+            </select>
+            <div class="submit-gen">
+              <input class="btn-block btn-primary" type=submit name=btn value="Generate Report">
+              <input class="btn-block" type=submit name=btn value="Generate With Link">
+              <input class="btn-block" type=submit name=btn value="Download PDF Report">
+            </div>
+          </form>
+        </div>
+      {% endif %}
 
       <div class=report>
         {% block report %}{% endblock %}
@@ -90,6 +93,11 @@
       {% if report_url %}
         <script>window.prompt("Copy this URL for a link to the report",
                               '{{ report_url | safe }}');</script>
+      {% endif %}
+
+      {% if pandocfail %}
+        <script>window.alert("Failed to generate PDF.\n" +
+                             "Do you have Pandoc and Latex installed?");</script>
       {% endif %}
     </div>
   </body>

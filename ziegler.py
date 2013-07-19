@@ -2,10 +2,11 @@ import os
 import sys
 import os.path as op
 import argparse
+import subprocess as sp
 import numpy as np
 import pandas as pd
 
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, send_file
 
 from lyman import gather_project_info, gather_experiment_info
 
@@ -106,6 +107,25 @@ def generate_report(arg1=None, arg2=None):
         else:
             info = request_to_info(request.args, info)
 
+    # Possibly generate a PDF
+    if request.form.get("btn", "") == "Download PDF Report":
+        info["reportonly"] = True
+        html = render_template("report.html", **info)
+        html = html.replace("/static", "static")
+
+        with open("report.html", "w") as fid:
+            fid.write(html)
+
+        try:
+            sp.check_output(["pandoc", "report.html",
+                             "-V", "geometry:margin=.75in",
+                             "-o", "report.pdf"])
+        except sp.CalledProcessError:
+            return render_template("layout.html",
+                                    pandocfail=True,
+                                    **basic_info())
+        return send_file("report.pdf")
+
     return render_template("report.html", **info)
 
 
@@ -155,6 +175,15 @@ def unlink_source():
         os.unlink("static/analysis")
 
 
+def clean_up():
+    """Remove files that get created during runtime."""
+    unlink_source()
+    for ext in ["html", "pdf"]:
+        fname = "report." + ext
+        if op.exists(fname):
+            os.remove(fname)
+
+
 if __name__ == "__main__":
     try:
         link_source()
@@ -164,4 +193,4 @@ if __name__ == "__main__":
             args.debug = False
         app.run(host=host, debug=args.debug, port=args.port)
     finally:
-        unlink_source()
+        clean_up()
