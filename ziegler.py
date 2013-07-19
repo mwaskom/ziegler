@@ -110,7 +110,11 @@ def generate_report(arg1=None, arg2=None):
 @app.template_filter("csv_to_html")
 def cluster_csv_to_html(csv_file):
     """Read the csv file with peak information and generate an html table."""
-    df = pd.read_csv(str(csv_file), index_col="Peak")
+    try:
+        df = pd.read_csv(str(csv_file), index_col="Peak")
+    except IOError:
+        print "Could not read " + csv_file
+        return ""
     df = df.reset_index()
     df["Peak"] += 1
     html = df.to_html(index=False, classes=["table",
