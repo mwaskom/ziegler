@@ -63,15 +63,18 @@ def generate_report(arg1=None, arg2=None):
         # Possibly generate a url for the report
         form = request.form
         if form.get("btn", "") == "Generate With Link":
-            url = request.url + "?"
-            args = ["=".join([k, v]) for k, v in form.iteritems()
-                    if k != "btn"
-                    and not (k == "space"
-                             and not (form.getlist("ffx")
-                                      or form.getlist("group")))
-                    and not (k == "groupname" and not form.getlist("group"))]
-
-            url += "&".join(args)
+            args = ""
+            for key in form:
+                if key == "btn":
+                    continue
+                elif key == "space" and not (form.getlist("ffx")
+                                             or form.getlist("group")):
+                    continue
+                elif key == "groupname" and not form.getlist("group"):
+                    continue
+                for value in form.getlist(key):
+                    args += "%s=%s&" % (key, value)
+            url = request.url + "?" + args
             info["report_url"] = unicode(url)
 
         # Populate info off the form values
