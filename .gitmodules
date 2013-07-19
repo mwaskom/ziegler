@@ -1,0 +1,3 @@
+[submodule "nsviewer"]
+	path = nsviewer
+	url = git@github.com:neurosynth/nsviewer.git
