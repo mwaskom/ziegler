@@ -71,13 +71,17 @@
             {% endfor %}
           </select>
           <div class="submit-gen">
-            <input class="btn-block btn-primary" type=submit value=Generate>
+            <input class="btn-block btn-primary" type=submit name=btn value="Generate Report">
+            <input class="btn-block" type=submit name=btn value="Generate With Link">
           </div>
         </form>
       </div>
       <div class=report>
         {% block report %}{% endblock %}
       </div>
+      {% if report_url %}
+        <script>window.prompt("Copy this URL for a link to the report", '{{ report_url | safe }}');</script>
+      {% endif %}
     </div>
   </body>
 </html>

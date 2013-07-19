@@ -59,29 +59,47 @@ def generate_report(arg1=None, arg2=None):
     info = basic_info()
 
     if request.method == "POST":
-        info["subjects"] = request.form.getlist("subjects")
-        info["anatomy"] = request.form.getlist("anatomy")
-        info["preproc"] = request.form.getlist("preproc")
-        info["model"] = request.form.getlist("model")
-        info["ffx"] = request.form.getlist("ffx")
-        info["space"] = request.form["space"]
-        info["group"] = request.form.getlist("group")
-        info["contrasts"] = request.form.getlist("contrasts")
+
+        # Possibly generate a url for the report
+        if request.form.get("btn", "") == "Generate With Link":
+            url = request.url + "?"
+            args = ["=".join([k, v]) for k, v in request.form.iteritems()
+                    if k != "btn"
+                    and not (k == "space"
+                             and not (request.form.getlist("ffx")
+                                      or request.form.getlist("group")))]
+            url += "&".join(args)
+            info["report_url"] = unicode(url)
+
+        # Populate info off the form values
+        info = request_to_info(request.form, info)
+
     else:
+
+        # Populate info for a group report
         if arg1 == "group":
             info["group"] = ["mask", "zstat", "peaks", "boxplot"]
             info["space"] = "mni"
-            info["contrasts"] = (info["all_contrasts"] if arg2 is None
-                                 else [arg2])
-        else:
+            if arg2 is None:
+                info["contrasts"] = info["all_contrasts"]
+            else:
+                info["contrasts"] = [arg2]
+
+        # Populate info for a subject report
+        elif arg1 is not None:
             info["subjects"] = [] if arg1 is None else [arg1]
             info["anatomy"] = ["anatwarp"]
             info["preproc"] = ["realign", "mc_target", "mean_func",
                                "art", "coreg"]
-            info["model"] = ["design_mat", "design_corr", "residuals", "zstats"]
+            info["model"] = ["design_mat", "design_corr",
+                             "residuals", "zstats"]
             info["ffx"] = ["mask", "zstat"]
             info["space"] = "mni" if arg2 is None else arg2
             info["contrasts"] = info["all_contrasts"]
+
+        # Populate info off the arguments
+        else:
+            info = request_to_info(request.args, info)
 
     return render_template("report.html", **info)
 
@@ -98,6 +116,16 @@ def cluster_csv_to_html(csv_file):
     html = html.replace('border="1"', '')
     html = html.replace('class="dataframe ', 'class="')
     return html
+
+
+def request_to_info(req, info):
+    """Given a request multidict, populate the info dict."""
+    for key in ["subjects", "anatomy", "preproc", "model",
+                "ffx", "group", "contrasts"]:
+        info[key] = req.getlist(key)
+    info["space"] = req.get("space", "")
+
+    return info
 
 
 def link_source():
