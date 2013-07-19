@@ -67,11 +67,13 @@
     {% if ffx %}
       <h3>Fixed Effects</h3>
       {% for contrast in contrasts %}
-        <h4>Contrast: {{ contrast }}</h4>
         {% if "mask" in ffx %}
-          <h5>Mask Overlap</h5>
-          <img src="/static/analysis/{{ subj }}/ffx/{{ space }}/smoothed/{{ contrast }}/mask_overlap.png"><br>
+          {% if loop.first %}
+            <h5>Mask Overlap</h5>
+            <img src="/static/analysis/{{ subj }}/ffx/{{ space }}/smoothed/{{ contrast }}/mask_overlap.png"><br>
+          {% endif %}
         {% endif %}
+        <h4>Contrast: {{ contrast }}</h4>
         {% if "zstat" in ffx %}
           <h5>Z-Stat Image</h5>
           <img src="/static/analysis/{{ subj }}/ffx/{{ space }}/smoothed/{{ contrast }}/zstat1.png"><br>
@@ -83,10 +85,12 @@
 {% if group %}
   <h2>Group Analysis</h2>
   {% for contrast in contrasts %}
-    <h3>Contrast: {{ contrast }}</h3>
     {% if "mask" in group %}
-      <h4>Group Mask</h4>
-      <img src="/static/analysis/group/{{ space }}/{{ contrast }}/pos_variance.png"><br>
+      {% if loop.first %}
+        <h4>Group Mask</h4>
+        <img src="/static/analysis/group/{{ space }}/{{ contrast }}/pos_variance.png"><br>
+      {% endif %}
+    <h3>Contrast: {{ contrast }}</h3>
     {% endif %}
     {% if "zstat" in group %}
       <h4>Z-Stat Image<h4>
