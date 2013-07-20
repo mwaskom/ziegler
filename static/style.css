@@ -42,6 +42,17 @@ div.report {
 
   }
 
+div.viewer {
+
+  text-align: left;
+  margin-top: 5px;
+  margin-left: 255px;
+  position: absolute;
+  width: 800px;
+  height: 100%;
+
+  }
+
 select {
 
   width: 100%;

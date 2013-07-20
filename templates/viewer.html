@@ -1,0 +1,91 @@
+{% extends "layout.html" %}
+{% block viewer %}
+
+<script>
+  $(document).ready(function() {
+
+    viewer = new Viewer('#layer_list', '.layer_settings');
+    viewer.addView('#view_axial', Viewer.AXIAL);
+    viewer.addView('#view_coronal', Viewer.CORONAL);
+    viewer.addView('#view_sagittal', Viewer.SAGITTAL);
+    viewer.addSlider('opacity', '.slider#opacity', 'horizontal', 0, 1, 1, 0.05);
+    viewer.addSlider('pos-threshold', '.slider#pos-threshold', 'horizontal', 0, 1, 0, 0.01);
+    viewer.addSlider('neg-threshold', '.slider#neg-threshold', 'horizontal', 0, 1, 0, 0.01);
+    viewer.addSlider("nav-xaxis", ".slider#nav-xaxis", "horizontal", 0, 1, 0.5, 0.01, Viewer.XAXIS);
+    viewer.addSlider("nav-yaxis", ".slider#nav-yaxis", "vertical", 0, 1, 0.5, 0.01, Viewer.YAXIS);
+    viewer.addSlider("nav-zaxis", ".slider#nav-zaxis", "vertical", 0, 1, 0.5, 0.01, Viewer.ZAXIS);
+
+    viewer.addColorSelect('#select_color');
+    viewer.addSignSelect('#select_sign')
+    viewer.addDataField('voxelValue', '#data_current_value')
+    viewer.addDataField('currentCoords', '#data_current_coords')
+    viewer.clear()
+
+    images = [
+      {% for data in viewdata %}
+        {
+          'url': "{{ data.url }}",
+          'name': "{{ data.name }}",
+          'colorPalette': "{{ data.palette }}",
+          'cache': true
+        } {% if not loop.last %},{% endif %}
+      {% endfor %}
+    /*
+    {
+			'url': '/static/nsviewer/example/data/MNI152.nii.gz',
+			'name': 'MNI152 2mm',
+			'colorPalette': 'grayscale',
+			'cache': true
+    */
+		];
+    viewer.loadImages(images);
+
+  });
+</script>
+
+<div class="viewer">
+  <div class='row'>
+    <div class='span1'></div>
+    <div class='span11'>
+      <div id="views_left">
+        <div class='view' id='view_coronal'>
+          <canvas height='220' id='cor_canvas' width='220'></canvas>
+          <div class='slider nav-slider-vertical' id='nav-yaxis'></div>
+        </div>
+        <div class='view' id='view_axial'>
+          <canvas height='264' id='axial_canvas' width='220'></canvas>
+          <div class='slider nav-slider-vertical' id='nav-zaxis'></div>
+        </div>
+      </div>
+      <div id="views_right">
+        <div class='view' id='view_sagittal'>
+          <canvas height='220' id='sag_canvas' width='264'></canvas>
+          <div class='slider nav-slider-horizontal' id='nav-xaxis'></div>
+        </div>
+        <div id="data_panel">
+          <div id="data_current_coords"></div>
+          <div id="data_current_value"></div>
+        </div>
+      </div>
+
+      <div id="layer_panel">
+        <div id="layer_list_panel">
+          <div>Layers</div>
+          <div id="layer_visible_list"></div>
+          <ul id="layer_list" class="layer_settings">
+          </ul>
+          </select>
+        </div>
+        <div id="layer_settings_panel">
+          Color palette:<select id="select_color" class="layer_settings"></select>
+          Positive/Negative:<select id="select_sign" class="layer_settings"></select>
+          Opacity:<div class='slider layer_settings' id='opacity'></div>
+          Pos. threshold:<div class='slider layer_settings' id='pos-threshold'></div>
+          Neg. threshold: <div class='slider layer_settings' id='neg-threshold'></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

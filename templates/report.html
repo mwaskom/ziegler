@@ -1,110 +1,112 @@
 {% extends "layout.html" %}
 {% block report %}
-  {% for subj in subjects %}
-    <h2>{{ subj }}</h2>
+  <div class="report">
+    {% for subj in subjects %}
+      <h2>{{ subj }}</h2>
 
-    {% if preproc %}
-      <h3>Preprocessing</h3>
+      {% if preproc %}
+        <h3>Preprocessing</h3>
 
-      {% for run in runs %}
-        {% if preproc != ["anatwarp"] %}
-          <h4>Run {{ run }}</h4><br>
-        {% endif %}
-        {% if "mc_target" in preproc %}
-          <h5>Motion Correction Target</h3>
-          <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/example_func.png"><br>
-        {% endif %}
-        {% if "realign" in preproc %}
-          <h5>Realignment Parameters</h3>
-          <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/realignment_plots.png"><br>
-        {% endif %}
-        {% if "mean_func" in preproc %}
-          <h5>Mean Functional Volume</h3>
-          <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/mean_func.png"><br>
-        {% endif %}
-        {% if "art" in preproc %}
-          <h5>Artifact Detection</h3>
-          <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/intensity_plot.png"><br>
-        {% endif %}
-        {% if "coreg" in preproc %}
-          <h5>Anatomical Coregistration</h3>
-          <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/func2anat.png" width=872px><br>
-        {% endif %}
-      {% endfor %}
+        {% for run in runs %}
+          {% if preproc != ["anatwarp"] %}
+            <h4>Run {{ run }}</h4><br>
+          {% endif %}
+          {% if "mc_target" in preproc %}
+            <h5>Motion Correction Target</h3>
+            <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/example_func.png"><br>
+          {% endif %}
+          {% if "realign" in preproc %}
+            <h5>Realignment Parameters</h3>
+            <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/realignment_plots.png"><br>
+          {% endif %}
+          {% if "mean_func" in preproc %}
+            <h5>Mean Functional Volume</h3>
+            <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/mean_func.png"><br>
+          {% endif %}
+          {% if "art" in preproc %}
+            <h5>Artifact Detection</h3>
+            <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/intensity_plot.png"><br>
+          {% endif %}
+          {% if "coreg" in preproc %}
+            <h5>Anatomical Coregistration</h3>
+            <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/func2anat.png" width=872px><br>
+          {% endif %}
+        {% endfor %}
 
-      {% if "anatwarp" in preproc %}
-        <h5>Normalization</h4><br>
-        <img src="/static/data/{{ subj }}/normalization/warp_report.png"><br>
+        {% if "anatwarp" in preproc %}
+          <h5>Normalization</h4><br>
+          <img src="/static/data/{{ subj }}/normalization/warp_report.png"><br>
+        {% endif %}
+
       {% endif %}
 
-    {% endif %}
+      {% if model %}
+        <h3>Timeseries Model</h3>
+        {% for run in runs %}
+          <h4>Run {{ run }}</h4><br>
+          {% if "design_mat" in model %}
+            <h5>Design Matrix</h5><br>
+            <img src="/static/analysis/{{ subj }}/model/smoothed/run_{{ run }}/design.png"><br>
+          {% endif %}
+          {% if "design_corr" in model %}
+            <h5>Design Correlation</h5><br>
+            <img src="/static/analysis/{{ subj }}/model/smoothed/run_{{ run }}/design_correlation.png"><br>
+          {% endif %}
+          {% if "residuals" in model %}
+            <h5>Model Residuals</h5><br>
+            <img src="/static/analysis/{{ subj }}/model/smoothed/run_{{ run }}/sigmasquareds.png"><br>
+          {% endif %}
+          {% if "zstats" in model %}
+            <h5>Z-Stat Images</h5><br>
+            {% for contrast in contrasts %}
+              <h6>Contrast: {{ contrast }}</h6>
+              <img src="/static/analysis/{{ subj }}/model/smoothed/run_{{ run }}/zstat{{ loop.index }}.png"><br>
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
 
-    {% if model %}
-      <h3>Timeseries Model</h3>
-      {% for run in runs %}
-        <h4>Run {{ run }}</h4><br>
-        {% if "design_mat" in model %}
-          <h5>Design Matrix</h5><br>
-          <img src="/static/analysis/{{ subj }}/model/smoothed/run_{{ run }}/design.png"><br>
-        {% endif %}
-        {% if "design_corr" in model %}
-          <h5>Design Correlation</h5><br>
-          <img src="/static/analysis/{{ subj }}/model/smoothed/run_{{ run }}/design_correlation.png"><br>
-        {% endif %}
-        {% if "residuals" in model %}
-          <h5>Model Residuals</h5><br>
-          <img src="/static/analysis/{{ subj }}/model/smoothed/run_{{ run }}/sigmasquareds.png"><br>
-        {% endif %}
-        {% if "zstats" in model %}
-          <h5>Z-Stat Images</h5><br>
-          {% for contrast in contrasts %}
-            <h6>Contrast: {{ contrast }}</h6>
-            <img src="/static/analysis/{{ subj }}/model/smoothed/run_{{ run }}/zstat{{ loop.index }}.png"><br>
-          {% endfor %}
-        {% endif %}
-      {% endfor %}
-    {% endif %}
+      {% if ffx %}
+        <h3>Fixed Effects</h3>
+        {% for contrast in contrasts %}
+          {% if "mask" in ffx %}
+            {% if loop.first %}
+              <h5>Mask Overlap</h5><br>
+              <img src="/static/analysis/{{ subj }}/ffx/{{ space }}/smoothed/{{ contrast }}/mask_overlap.png"><br>
+            {% endif %}
+          {% endif %}
+          {% if "zstat" in ffx %}
+            <h4>Contrast: {{ contrast }}</h4><br>
+            <h5>Z-Stat Image</h5><br>
+            <img src="/static/analysis/{{ subj }}/ffx/{{ space }}/smoothed/{{ contrast }}/zstat1.png"><br>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
 
-    {% if ffx %}
-      <h3>Fixed Effects</h3>
+    {% if group %}
+      <h2>Group Analysis</h2>
       {% for contrast in contrasts %}
-        {% if "mask" in ffx %}
+        {% if "mask" in group %}
           {% if loop.first %}
-            <h5>Mask Overlap</h5><br>
-            <img src="/static/analysis/{{ subj }}/ffx/{{ space }}/smoothed/{{ contrast }}/mask_overlap.png"><br>
+            <h4>Group Mask</h4><br>
+            <img src="/static/analysis/{{ groupname }}/{{ space }}/{{ contrast }}/pos_variance.png"><br>
           {% endif %}
         {% endif %}
-        {% if "zstat" in ffx %}
-          <h4>Contrast: {{ contrast }}</h4><br>
-          <h5>Z-Stat Image</h5><br>
-          <img src="/static/analysis/{{ subj }}/ffx/{{ space }}/smoothed/{{ contrast }}/zstat1.png"><br>
+        <h3>Contrast: {{ contrast }}</h3>
+        {% if "zstat" in group %}
+          <h4>Z-Stat Image<h4>
+          <img src="/static/analysis/{{ groupname }}/{{ space }}/{{ contrast }}/zstat1_threshold_overlay.png"><br>
+        {% endif %}
+        {% if "peaks" in group %}
+          <h4>Activation Peaks</h4><br>
+          {% filter csv_to_html %}static/analysis/{{ groupname }}/{{ space }}/{{ contrast }}/zstat1_localmax.csv{% endfilter %}
+        {% endif %}<br>
+        {% if "boxplot" in group %}
+          <h4>COPE Distributions</h4><br>
+          <img src="/static/analysis/{{ groupname }}/{{ space }}/{{ contrast }}/peak_boxplot.png"><br>
         {% endif %}
       {% endfor %}
     {% endif %}
-
-  {% endfor %}
-{% if group %}
-  <h2>Group Analysis</h2>
-  {% for contrast in contrasts %}
-    {% if "mask" in group %}
-      {% if loop.first %}
-        <h4>Group Mask</h4><br>
-        <img src="/static/analysis/{{ groupname }}/{{ space }}/{{ contrast }}/pos_variance.png"><br>
-      {% endif %}
-    {% endif %}
-    <h3>Contrast: {{ contrast }}</h3>
-    {% if "zstat" in group %}
-      <h4>Z-Stat Image<h4>
-      <img src="/static/analysis/{{ groupname }}/{{ space }}/{{ contrast }}/zstat1_threshold_overlay.png"><br>
-    {% endif %}
-    {% if "peaks" in group %}
-      <h4>Activation Peaks</h4><br>
-      {% filter csv_to_html %}static/analysis/{{ groupname }}/{{ space }}/{{ contrast }}/zstat1_localmax.csv{% endfilter %}
-    {% endif %}<br>
-    {% if "boxplot" in group %}
-      <h4>COPE Distributions</h4><br>
-      <img src="/static/analysis/{{ groupname }}/{{ space }}/{{ contrast }}/peak_boxplot.png"><br>
-    {% endif %}
-  {% endfor %}
-{% endif %}
+  </div>
 {% endblock %}

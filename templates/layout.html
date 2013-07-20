@@ -2,11 +2,30 @@
 <html lang="en">
 
   <head>
-    <link rel="stylesheet" media="screen"
-          href="{{ url_for('static', filename='bootstrap.min.css') }}">
     <link rel=stylesheet type=text/css
           href="{{ url_for('static', filename='style.css') }}">
-    <title>Ziegler</title>
+    <link rel="stylesheet" media="screen"
+          href="{{ url_for('static', filename='bootstrap.min.css') }}">
+
+    {% if javascript %}
+      <link rel=stylesheet type=text/css
+            href="{{ url_for('static', filename='nsviewer/example/css/style.css') }}">
+      <link rel=stylesheet type=text/css
+            href="{{ url_for('static', filename='nsviewer/example/css/jquery-ui.css') }}">
+
+      <script src="static/nsviewer/example/js/panzoom.js" type="text/javascript"></script>
+      <script src="static/nsviewer/example/js/jquery.min.js" type="text/javascript"></script>
+      <script src="static/nsviewer/example/js/xtk.js" type="text/javascript"></script>
+      <script src="static/nsviewer/example/js/jquery-ui.min.js" type="text/javascript"></script>
+      <script src="static/nsviewer/example/js/bootstrap.min.js" type="text/javascript"></script>
+      <script src="static/nsviewer/example/js/rainbow.js" type="text/javascript"></script>
+      <script src="static/nsviewer/example/js/sylvester.js" type="text/javascript"></script>
+      <script src="static/nsviewer/example/js/amplify.min.js" type="text/javascript"></script>
+      <script src="static/nsviewer/example/js/viewer.js" type="text/javascript"></script>
+
+    {% endif %}
+
+    <title>Ziegler: {{ experiment }}</title>
   </head>
 
   <body>
@@ -86,9 +105,9 @@
         </div>
       {% endif %}
 
-      <div class=report>
-        {% block report %}{% endblock %}
-      </div>
+      {% block report %}{% endblock %}
+
+      {% block viewer %}{% endblock %}
 
       {% if report_url %}
         <script>window.prompt("Copy this URL for a link to the report",

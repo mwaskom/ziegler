@@ -6,7 +6,7 @@ import subprocess as sp
 import numpy as np
 import pandas as pd
 
-from flask import Flask, request, render_template, send_file
+from flask import Flask, request, render_template, send_file, url_for
 
 from lyman import gather_project_info, gather_experiment_info
 
@@ -127,6 +127,25 @@ def generate_report(arg1=None, arg2=None):
         return send_file("report.pdf")
 
     return render_template("report.html", **info)
+
+
+@app.route("/viewer")
+def viewer():
+    info = basic_info()
+    info["javascript"] = True
+
+    viewdata = []
+    urls = request.args.getlist("url")
+    names = request.args.getlist("name")
+    palettes = request.args.getlist("palette")
+
+    datazip = zip(urls, names, palettes)
+    for data in datazip:
+        viewdata.append(dict(zip(["url", "name", "palette"], data)))
+
+    info["viewdata"] = viewdata
+
+    return render_template("viewer.html", **info)
 
 
 @app.template_filter("csv_to_html")
