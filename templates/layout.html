@@ -2,10 +2,10 @@
 <html lang="en">
 
   <head>
-    <link rel=stylesheet type=text/css
-          href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" media="screen"
           href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <link rel=stylesheet type=text/css
+          href="{{ url_for('static', filename='style.css') }}">
 
     {% if javascript %}
       <link rel=stylesheet type=text/css
@@ -46,11 +46,12 @@
             </select>
 
             <legend>Preprocessing</legend>
-            <select multiple="multiple" size=6 name=preproc>
-              <option value=realign>Realignment Parameters</option>
+            <select multiple="multiple" size=7 name=preproc>
               <option value=mc_target>Motion Correction Target</option>
-              <option value=mean_func>Mean Functional Volume</option>
-              <option value=art>Artifact Detection</option>
+              <option value=realign>Realignment Parameters</option>
+              <option value=mean_func>Mean BOLD Intensity</option>
+              <option value=brain_mask>Brain Mask</option>
+              <option value=artifacts>Artifact Detection</option>
               <option value=coreg>Coregistration</option>
               <option value=anatwarp>Normalization</option>
             </select>

@@ -20,16 +20,20 @@
             <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/realignment_plots.png"><br>
           {% endif %}
           {% if "mean_func" in preproc %}
-            <h5>Mean Functional Volume</h3>
+            <h5>Mean BOLD Intensity</h3>
             <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/mean_func.png"><br>
           {% endif %}
-          {% if "art" in preproc %}
+          {% if "brain_mask" in preproc %}
+            <h5>Brain Mask</h3>
+            <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/functional_mask.png"><br>
+          {% endif %}
+          {% if "artifacts" in preproc %}
             <h5>Artifact Detection</h3>
-            <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/intensity_plot.png"><br>
+            <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/artifact_detection.png"><br>
           {% endif %}
           {% if "coreg" in preproc %}
             <h5>Anatomical Coregistration</h3>
-            <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/func2anat.png" width=872px><br>
+            <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/func2anat.png"><br>
           {% endif %}
         {% endfor %}
 
