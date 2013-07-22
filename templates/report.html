@@ -1,4 +1,9 @@
 {% extends "layout.html" %}
+
+{% macro view(path, name, palette='grayscale') -%}
+    url={{ path }}/{{ name }}.nii.gz&name={{ name }}&palette={{ palette }}
+{%- endmacro %}
+
 {% block report %}
   <div class="report">
     {% for subj in subjects %}
@@ -11,29 +16,32 @@
           {% if preproc != ["anatwarp"] %}
             <h4>Run {{ run }}</h4><br>
           {% endif %}
+        {% set path = "static/analysis/" ~ subj ~ "/preproc/run_" ~ run %}
           {% if "mc_target" in preproc %}
             <h5>Motion Correction Target</h3>
-            <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/example_func.png"><br>
+            {% set vlink = "viewer?" ~ view(path, 'example_func') %}
+            <a href={{ vlink }}><img src="{{ path }}/example_func.png"></a>
+            <br>
           {% endif %}
           {% if "realign" in preproc %}
             <h5>Realignment Parameters</h3>
-            <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/realignment_plots.png"><br>
+            <img src="{{ path }}/realignment_plots.png"><br>
           {% endif %}
           {% if "mean_func" in preproc %}
             <h5>Mean BOLD Intensity</h3>
-            <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/mean_func.png"><br>
+            <img src="{{ path }}/mean_func.png"><br>
           {% endif %}
           {% if "brain_mask" in preproc %}
             <h5>Brain Mask</h3>
-            <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/functional_mask.png"><br>
+            <img src="{{ path }}/functional_mask.png"><br>
           {% endif %}
           {% if "artifacts" in preproc %}
             <h5>Artifact Detection</h3>
-            <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/artifact_detection.png"><br>
+            <img src="{{ path }}/artifact_detection.png"><br>
           {% endif %}
           {% if "coreg" in preproc %}
             <h5>Anatomical Coregistration</h3>
-            <img src="/static/analysis/{{ subj }}/preproc/run_{{ run }}/func2anat.png"><br>
+            <img src="{{ path }}/func2anat.png"><br>
           {% endif %}
         {% endfor %}
 
@@ -47,24 +55,25 @@
       {% if model %}
         <h3>Timeseries Model</h3>
         {% for run in runs %}
+          {% set path = "static/analysis/" ~ subj ~ "/model/smoothed/run_" ~ run %}
           <h4>Run {{ run }}</h4><br>
           {% if "design_mat" in model %}
             <h5>Design Matrix</h5><br>
-            <img src="/static/analysis/{{ subj }}/model/smoothed/run_{{ run }}/design.png"><br>
+            <img src="{{ path }}/design.png"><br>
           {% endif %}
           {% if "design_corr" in model %}
             <h5>Design Correlation</h5><br>
-            <img src="/static/analysis/{{ subj }}/model/smoothed/run_{{ run }}/design_correlation.png"><br>
+            <img src="{{ path }}/design_correlation.png"><br>
           {% endif %}
           {% if "residuals" in model %}
             <h5>Model Residuals</h5><br>
-            <img src="/static/analysis/{{ subj }}/model/smoothed/run_{{ run }}/sigmasquareds.png"><br>
+            <img src="{{ path }}/sigmasquareds.png"><br>
           {% endif %}
           {% if "zstats" in model %}
             <h5>Z-Stat Images</h5><br>
             {% for contrast in contrasts %}
               <h6>Contrast: {{ contrast }}</h6>
-              <img src="/static/analysis/{{ subj }}/model/smoothed/run_{{ run }}/zstat{{ loop.index }}.png"><br>
+              <img src="{{ path }}/zstat{{ loop.index }}.png"><br>
             {% endfor %}
           {% endif %}
         {% endfor %}
@@ -73,16 +82,17 @@
       {% if ffx %}
         <h3>Fixed Effects</h3>
         {% for contrast in contrasts %}
+          {% set path = "static/analysis/" ~ subj ~ "/ffx/" ~ space ~ "/smoothed/" ~ contrast %}
           {% if "mask" in ffx %}
             {% if loop.first %}
               <h5>Mask Overlap</h5><br>
-              <img src="/static/analysis/{{ subj }}/ffx/{{ space }}/smoothed/{{ contrast }}/mask_overlap.png"><br>
+              <img src="{{ path }}/mask_overlap.png"><br>
             {% endif %}
           {% endif %}
           {% if "zstat" in ffx %}
             <h4>Contrast: {{ contrast }}</h4><br>
             <h5>Z-Stat Image</h5><br>
-            <img src="/static/analysis/{{ subj }}/ffx/{{ space }}/smoothed/{{ contrast }}/zstat1.png"><br>
+            <img src="{{ path }}/zstat1.png"><br>
           {% endif %}
         {% endfor %}
       {% endif %}
@@ -91,24 +101,28 @@
     {% if group %}
       <h2>Group Analysis</h2>
       {% for contrast in contrasts %}
+        {% set path = "static/analysis/" ~ groupname ~ "/" ~ space ~ "/" ~ contrast %}
         {% if "mask" in group %}
           {% if loop.first %}
             <h4>Group Mask</h4><br>
-            <img src="/static/analysis/{{ groupname }}/{{ space }}/{{ contrast }}/pos_variance.png"><br>
+            <img src="{{ path }}/pos_variance.png"><br>
           {% endif %}
         {% endif %}
         <h3>Contrast: {{ contrast }}</h3>
         {% if "zstat" in group %}
           <h4>Z-Stat Image<h4>
-          <img src="/static/analysis/{{ groupname }}/{{ space }}/{{ contrast }}/zstat1_threshold_overlay.png"><br>
+          {% set anatpath = "static/nsviewer/example/data/" %}
+          {% set vlink = "viewer?" ~ view(anatpath, 'MNI152') ~ "&" ~ view(path, 'zstat1', "intense%20red-blue")  %}
+          <a href={{ vlink }}><img src="{{ path }}/zstat1_threshold_overlay.png"></a>
+          <br>
         {% endif %}
         {% if "peaks" in group %}
           <h4>Activation Peaks</h4><br>
-          {% filter csv_to_html %}static/analysis/{{ groupname }}/{{ space }}/{{ contrast }}/zstat1_localmax.csv{% endfilter %}
+          {% filter csv_to_html %}{{ path }}/zstat1_localmax.csv{% endfilter %}
         {% endif %}<br>
         {% if "boxplot" in group %}
           <h4>COPE Distributions</h4><br>
-          <img src="/static/analysis/{{ groupname }}/{{ space }}/{{ contrast }}/peak_boxplot.png"><br>
+          <img src="{{ path }}/peak_boxplot.png"><br>
         {% endif %}
       {% endfor %}
     {% endif %}
