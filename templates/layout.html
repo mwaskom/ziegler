@@ -7,6 +7,8 @@
     <link rel=stylesheet type=text/css
           href="{{ url_for('static', filename='style.css') }}">
 
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js" type="text/javascript"></script>
+
     {% if javascript %}
       <link rel=stylesheet type=text/css
             href="{{ url_for('static', filename='nsviewer/example/css/style.css') }}">
@@ -14,7 +16,6 @@
             href="{{ url_for('static', filename='nsviewer/example/css/jquery-ui.css') }}">
 
       <script src="static/nsviewer/example/js/panzoom.js" type="text/javascript"></script>
-      <script src="static/nsviewer/example/js/jquery.min.js" type="text/javascript"></script>
       <script src="static/nsviewer/example/js/xtk.js" type="text/javascript"></script>
       <script src="static/nsviewer/example/js/jquery-ui.min.js" type="text/javascript"></script>
       <script src="static/nsviewer/example/js/bootstrap.min.js" type="text/javascript"></script>
@@ -38,72 +39,88 @@
           </div>
 
           <form action={{ url_for('generate_report') }} method=post id=mainform>
-            <legend>Subjects</legend>
-            <select multiple="multiple" size={{ selector_size }} name=subjects>
-              {% for subj in all_subjects %}
-                <option value="{{ subj }}">{{ subj }}</option>
-              {% endfor %}
-            </select>
 
-            <legend>Preprocessing</legend>
-            <select multiple="multiple" size=7 name=preproc>
-              <option value=mc_target>Motion Correction Target</option>
-              <option value=realign>Realignment Parameters</option>
-              <option value=brain_mask>Brain Mask</option>
-              <option value=mean_func>Mean BOLD Intensity</option>
-              <option value=artifacts>Artifact Detection</option>
-              <option value=coreg>Coregistration</option>
-              <option value=anatwarp>Normalization</option>
-            </select>
+            <div class=selector_group>
+              <legend>Subjects</legend>
+              <select multiple="multiple" size={{ subjects_size }} name=subjects id=subjects>
+                {% for subj in all_subjects %}
+                  <option value="{{ subj }}">{{ subj }}</option>
+                {% endfor %}
+              </select>
+            </div>
 
-            <legend>Timeseries Model</legend>
-            <select multiple="multiple" name=model>
-              <option value=design_mat>Design Matrix</option>
-              <option value=design_corr>Design Correlation</option>
-              <option value=residuals>Model Residuals</option>
-              <option value=zstats>Z-Stat Images</option>
-            </select>
+            <div class=selector_group>
+              <legend>Preprocessing</legend>
+              <select multiple="multiple" size=7 name=preproc id=preproc>
+                <option value=mc_target>Motion Correction Target</option>
+                <option value=realign>Realignment Parameters</option>
+                <option value=brain_mask>Brain Mask</option>
+                <option value=mean_func>Mean BOLD Intensity</option>
+                <option value=artifacts>Artifact Detection</option>
+                <option value=coreg>Coregistration</option>
+                <option value=anatwarp>Normalization</option>
+              </select>
+            </div>
 
-            <legend>Fixed Effects</legend>
-            <select multiple="multiple" name=ffx>
-              <option value=mask>Mask Overlap</option>
-              <option value=zstat>Z-Stat Image</option>
-            </select>
-            <fieldset>
-              <label class="radio inline">
-                <input type="radio" name="space" value="mni" checked>
-                MNI
+            <div class=selector_group>
+              <legend>Timeseries Model</legend>
+              <select multiple="multiple" name=model id=model>
+                <option value=design_mat>Design Matrix</option>
+                <option value=design_corr>Design Correlation</option>
+                <option value=residuals>Model Residuals</option>
+                <option value=zstats>Z-Stat Images</option>
+              </select>
+            </div>
+
+            <div class=selector_group>
+              <legend>Fixed Effects</legend>
+              <select multiple="multiple" name=ffx id=ffx>
+                <option value=mask>Mask Overlap</option>
+                <option value=zstat>Z-Stat Image</option>
+              </select>
+              <fieldset id=ffxspace>
+                <label class="radio inline">
+                  <input type="radio" name="space" value="mni" checked>
+                  MNI
+                  </label>
+                <label class="radio inline">
+                  <input type="radio" name="space" value="epi">
+                  EPI
                 </label>
-              <label class="radio inline">
-                <input type="radio" name="space" value="epi">
-                EPI
-              </label>
-            </fieldset>
-            <br>
+                <br>
+              </fieldset>
+            </div>
 
-            <legend>ROI Masks</legend>
-            <select multiple="multiple" name=rois>
-              {% for roi in all_rois %}
-                <option value="{{ roi }}">{{ roi }}</option>
-              {% endfor %}
-            </select>
+            <div class=selector_group>
+              <legend>ROI Masks</legend>
+              <select multiple="multiple" name=rois id=rois>
+                {% for roi in all_rois %}
+                  <option value="{{ roi }}">{{ roi }}</option>
+                {% endfor %}
+              </select>
+            </div>
 
-            <legend>Group Analyses</legend>
-            <select multiple="multiple" name=group>
-              <option value=mask>Group Mask</option>
-              <option value=zstat>Z-Stat Image</option>
-              <option value=peaks>Activation Peaks</option>
-              <option value=boxplot>COPE Distributions</option>
-            </select>
-            <input type="text" name="groupname" class=input-block-level
-                   placeholder="group analysis output name">
+            <div class=selector_group>
+              <legend>Contrasts</legend>
+              <select multiple="multiple" size={{ contrast_size }} name=contrasts id=contrasts>
+                {% for contrast in all_contrasts %}
+                  <option value="{{ contrast }}">{{ contrast }}</option>
+                {% endfor %}
+              </select>
+            </div>
 
-            <legend>Contrasts</legend>
-            <select multiple="multiple" size={{ contrast_size }} name=contrasts>
-              {% for contrast in all_contrasts %}
-                <option value="{{ contrast }}">{{ contrast }}</option>
-              {% endfor %}
-            </select>
+            <div class=selector_group>
+              <legend>Group Analyses</legend>
+              <select multiple="multiple" name=group id=group>
+                <option value=mask>Group Mask</option>
+                <option value=zstat>Z-Stat Image</option>
+                <option value=peaks>Activation Peaks</option>
+                <option value=boxplot>COPE Distributions</option>
+              </select>
+              <input type="text" name="groupname" class=input-block-level id=groupname
+                     placeholder="group analysis output name">
+            </div>
+
             <div class="submit-gen">
               <input class="btn-block btn-primary" type=submit name=btn value="Generate Report">
               <input class="btn-block" type=submit name=btn value="Generate With Link">
@@ -129,3 +146,36 @@
     </div>
   </body>
 </html>
+
+<script>
+$("#preproc").hide();
+$("#model").hide();
+$("#ffx").hide();
+$("#ffxspace").hide();
+$("#rois").hide();
+$("#groupname").hide();
+$("#contrasts").hide();
+
+$("#subjects").change(function (){
+  $("#preproc:hidden").slideToggle(100);
+  $("#model:hidden").slideToggle(100);
+  $("#ffx:hidden").slideToggle(100);
+  {% if all_rois %}$("#rois:hidden").slideToggle(100);{% endif %}
+})
+
+$("#ffx").change(function() {
+  $("#ffxspace:hidden").slideToggle(100);
+  $("#contrasts:hidden").slideToggle(100);
+  })
+
+$("#group").change(function () {
+  $("#groupname:hidden").slideToggle(100);
+  $("#contrasts:hidden").slideToggle(100);
+  })
+
+$(function(){
+  $('legend').click(function(){
+    $(this).siblings().slideDown(100);
+  });
+});
+</script>

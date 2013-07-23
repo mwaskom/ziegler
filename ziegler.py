@@ -31,7 +31,7 @@ def basic_info():
     lyman_dir = os.environ["LYMAN_DIR"]
 
     subjects = np.loadtxt(op.join(lyman_dir, "subjects.txt"), str).tolist()
-    selector_size = min(len(subjects), 10)
+    subjects_size = min(len(subjects), 10)
 
     runs = range(1, exp["n_runs"] + 1)
 
@@ -44,7 +44,7 @@ def basic_info():
     roi_size = min(len(all_rois), 10)
 
     return dict(all_subjects=subjects,
-                selector_size=selector_size,
+                subjects_size=subjects_size,
                 experiment=args.experiment,
                 runs=runs,
                 all_contrasts=contrasts,
