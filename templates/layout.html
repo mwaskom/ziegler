@@ -81,6 +81,13 @@
             </fieldset>
             <br>
 
+            <legend>ROI Masks</legend>
+            <select multiple="multiple" name=rois>
+              {% for roi in all_rois %}
+                <option value="{{ roi }}">{{ roi }}</option>
+              {% endfor %}
+            </select>
+
             <legend>Group Analyses</legend>
             <select multiple="multiple" name=group>
               <option value=mask>Group Mask</option>

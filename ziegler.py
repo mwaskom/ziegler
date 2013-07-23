@@ -1,12 +1,13 @@
 import os
 import sys
 import os.path as op
+from glob import glob
 import argparse
 import subprocess as sp
 import numpy as np
 import pandas as pd
 
-from flask import Flask, request, render_template, send_file, url_for
+from flask import Flask, request, render_template, send_file
 
 from lyman import gather_project_info, gather_experiment_info
 
@@ -37,12 +38,19 @@ def basic_info():
     contrasts = [c[0] for c in exp["contrasts"]]
     contrast_size = len(contrasts)
 
+    all_rois = glob("static/data/*/masks/*.png")
+    all_rois = [op.splitext(op.basename(m))[0] for m in all_rois]
+    all_rois = sorted(list(set(all_rois)))
+    roi_size = min(len(all_rois), 10)
+
     return dict(all_subjects=subjects,
                 selector_size=selector_size,
                 experiment=args.experiment,
                 runs=runs,
                 all_contrasts=contrasts,
-                contrast_size=contrast_size)
+                contrast_size=contrast_size,
+                all_rois=all_rois,
+                roi_size=roi_size)
 
 
 @app.route("/")
@@ -168,7 +176,7 @@ def cluster_csv_to_html(csv_file):
 
 def request_to_info(req, info):
     """Given a request multidict, populate the info dict."""
-    keys = ["subjects", "preproc", "model", "ffx", "group", "contrasts"]
+    keys = ["subjects", "preproc", "model", "ffx", "rois", "group", "contrasts"]
     for key in keys:
         info[key] = req.getlist(key)
     info["space"] = req.get("space", "")

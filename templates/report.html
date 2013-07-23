@@ -96,6 +96,16 @@
           {% endif %}
         {% endfor %}
       {% endif %}
+
+      {% if rois %}
+        {% set path = "static/data/" ~ subj ~ "/masks" %}
+        <h3>ROI Masks</h3>
+        {% for roi in rois %}
+          <h4>{{ roi }}</h4>
+          <img src="{{ path }}/{{ roi }}.png"><br>
+        {% endfor %}
+      {% endif %}
+
     {% endfor %}
 
     {% if group %}
