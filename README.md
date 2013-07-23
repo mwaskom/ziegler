@@ -25,6 +25,13 @@ but you can also show a specific contrast with
 
     http://{app address}/group/<contrast>
 
+To view the app on a computer with no existing lyman environment, do
+
+    export LYMAN_DIR=testing/lyman
+
+You won't be able to generate any reports (there's no real data), but you can see what
+things look like and develop the basic interface.
+
 Dependencies
 ------------
 - [Flask](http://flask.pocoo.org/)
