@@ -146,10 +146,11 @@ def viewer():
     urls = request.args.getlist("url")
     names = request.args.getlist("name")
     palettes = request.args.getlist("palette")
+    signs = request.args.getlist("sign")
 
-    datazip = zip(urls, names, palettes)
+    datazip = zip(urls, names, palettes, signs)
     for data in datazip:
-        viewdata.append(dict(zip(["url", "name", "palette"], data)))
+        viewdata.append(dict(zip(["url", "name", "palette", "sign"], data)))
 
     info["viewdata"] = viewdata
 

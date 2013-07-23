@@ -27,16 +27,10 @@
           'url': "{{ data.url }}",
           'name': "{{ data.name }}",
           'colorPalette': "{{ data.palette }}",
+          'sign': "{{ data.sign }}",
           'cache': true
         } {% if not loop.last %},{% endif %}
       {% endfor %}
-    /*
-    {
-			'url': '/static/nsviewer/example/data/MNI152.nii.gz',
-			'name': 'MNI152 2mm',
-			'colorPalette': 'grayscale',
-			'cache': true
-    */
 		];
     viewer.loadImages(images);
 
