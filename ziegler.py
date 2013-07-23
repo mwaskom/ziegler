@@ -43,6 +43,13 @@ def basic_info():
     all_rois = sorted(list(set(all_rois)))
     roi_size = min(len(all_rois), 10)
 
+    any_preproc = bool(glob("static/analysis/*/preproc"))
+    any_model = bool(glob("static/analysis/*/model"))
+    any_ffx = bool(glob("static/analysis/*/ffx"))
+    any_rois = bool(glob("static/data/*/masks"))
+    any_group = op.exists("static/analysis/group")
+    any_contrasts = any_ffx or any_group
+
     return dict(all_subjects=subjects,
                 subjects_size=subjects_size,
                 experiment=args.experiment,
@@ -50,7 +57,14 @@ def basic_info():
                 all_contrasts=contrasts,
                 contrast_size=contrast_size,
                 all_rois=all_rois,
-                roi_size=roi_size)
+                roi_size=roi_size,
+                any_preproc=any_preproc,
+                any_model=any_model,
+                any_ffx=any_ffx,
+                any_rois=any_rois,
+                any_group=any_group,
+                any_contrasts=any_contrasts,
+                )
 
 
 @app.route("/")
