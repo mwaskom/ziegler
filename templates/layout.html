@@ -160,34 +160,36 @@
 </html>
 
 <script>
-$("#preproc").hide();
-$("#model").hide();
-$("#ffx").hide();
-$("#ffxspace").hide();
-$("#rois").hide();
-$("#groupname").hide();
-$("#contrasts").hide();
+  $(document).ready(function() {
+    $("#preproc").hide()
+    $("#model").hide();
+    $("#ffx").hide();
+    $("#ffxspace").hide();
+    $("#rois").hide();
+    $("#groupname").hide();
+    $("#contrasts").hide();
 
-$("#subjects").change(function (){
-  $("#preproc:hidden").slideToggle(100);
-  $("#model:hidden").slideToggle(100);
-  $("#ffx:hidden").slideToggle(100);
-  {% if all_rois %}$("#rois:hidden").slideToggle(100);{% endif %}
-})
+    $("#subjects").change(function (){
+      $("#preproc:hidden").slideToggle(200);
+      $("#model:hidden").slideToggle(200);
+      $("#ffx:hidden").slideToggle(200);
+      {% if all_rois %}$("#rois:hidden").slideToggle(200);{% endif %}
+    })
 
-$("#ffx").change(function() {
-  $("#ffxspace:hidden").slideToggle(100);
-  $("#contrasts:hidden").slideToggle(100);
+    $("#ffx").change(function() {
+      $("#ffxspace:hidden").slideToggle(200);
+      $("#contrasts:hidden").slideToggle(200);
+      })
+
+    $("#group").change(function () {
+      $("#groupname:hidden").slideToggle(200);
+      $("#contrasts:hidden").slideToggle(200);
+      })
+
+    $(function(){
+      $('legend').click(function(){
+        $(this).siblings().slideDown(200);
+      });
+    });
   })
-
-$("#group").change(function () {
-  $("#groupname:hidden").slideToggle(100);
-  $("#contrasts:hidden").slideToggle(100);
-  })
-
-$(function(){
-  $('legend').click(function(){
-    $(this).siblings().slideDown(100);
-  });
-});
 </script>
