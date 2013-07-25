@@ -130,7 +130,7 @@
           <h4>Activation Peak Table</h4><br>
           {% filter csv_to_html %}{{ path }}/zstat1_localmax.csv{% endfilter %}
         {% endif %}
-        {% if "peaktable" in group %}
+        {% if "peakimg" in group %}
           <h4>Activation Peak Image</h4><br>
           <img src="{{ path }}/zstat1_threshold_peaks.png"><br>
         {% endif %}
