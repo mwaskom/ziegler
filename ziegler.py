@@ -35,7 +35,7 @@ def basic_info():
 
     runs = range(1, exp["n_runs"] + 1)
 
-    contrasts = [c[0] for c in exp["contrasts"]]
+    contrasts = exp["contrast_names"]
     contrast_size = len(contrasts)
 
     all_rois = glob("static/data/*/masks/*.png")
