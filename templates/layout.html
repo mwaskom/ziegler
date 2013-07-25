@@ -122,10 +122,11 @@
             {% if any_group %}
               <div class=selector_group>
                 <legend>Group Analyses</legend>
-                <select multiple="multiple" name=group id=group>
+                <select multiple="multiple" size=5 name=group id=group>
                   <option value=mask>Group Mask</option>
                   <option value=zstat>Z-Stat Image</option>
-                  <option value=peaks>Activation Peaks</option>
+                  <option value=peaktable>Activation Peak Table</option>
+                  <option value=peakimg>Activation Peak Image</option>
                   <option value=boxplot>COPE Distributions</option>
                 </select>
                 <input type="text" name="groupname" class=input-block-level id=groupname

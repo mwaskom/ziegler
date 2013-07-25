@@ -107,7 +107,7 @@ def generate_report(arg1=None, arg2=None):
 
         # Populate info for a group report
         if arg1 == "group":
-            info["group"] = ["mask", "zstat", "peaks", "boxplot"]
+            info["group"] = ["mask", "zstat", "peaktable", "peakimage", "boxplot"]
             info["space"] = "mni"
             if arg2 is None:
                 info["contrasts"] = info["all_contrasts"]
