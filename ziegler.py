@@ -9,19 +9,21 @@ import pandas as pd
 
 from flask import Flask, request, render_template, send_file
 
-from lyman import gather_project_info, gather_experiment_info
+import lyman
 
-project = gather_project_info()
+project = lyman.gather_project_info()
 default_exp = project["default_exp"]
 
 parser = argparse.ArgumentParser()
+parser.add_argument("-subjects", nargs="*")
 parser.add_argument("-experiment", default=default_exp)
 parser.add_argument("-port", type=int, default=5000)
 parser.add_argument("-external", action="store_true")
 parser.add_argument("-debug", action="store_true")
 args = parser.parse_args(sys.argv[1:])
 
-exp = gather_experiment_info(args.experiment)
+exp = lyman.gather_experiment_info(args.experiment)
+subjects = lyman.determine_subjects(args.subjects)
 
 app = Flask(__name__)
 
@@ -30,7 +32,6 @@ def basic_info():
     """Basic information needed before any report options are set."""
     lyman_dir = os.environ["LYMAN_DIR"]
 
-    subjects = np.loadtxt(op.join(lyman_dir, "subjects.txt"), str).tolist()
     subjects_size = min(len(subjects), 10)
 
     runs = range(1, exp["n_runs"] + 1)
