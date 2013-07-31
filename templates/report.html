@@ -19,8 +19,7 @@
         {% set path = "static/analysis/" ~ subj ~ "/preproc/run_" ~ run %}
           {% if "mc_target" in preproc %}
             <h5>Motion Correction Target</h3>
-            {% set vlink = "viewer?" ~ view(path, 'example_func') %}
-            <a href={{ vlink }}><img src="{{ path }}/example_func.png"></a>
+            <img src="{{ path }}/example_func.png"></a>
             <br>
           {% endif %}
           {% if "realign" in preproc %}
