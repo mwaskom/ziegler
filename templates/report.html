@@ -91,7 +91,14 @@
           {% if "zstat" in ffx %}
             <h4>Contrast: {{ contrast }}</h4><br>
             <h5>Z-Stat Image</h5><br>
-            <img src="{{ path }}/zstat1.png"><br>
+              {% if space == "mni" %}
+                  {% set anatpath = "static/data/" ~ subj ~ "/normalization/" %}
+                  {% set funcpath = path ~ "/stats/" %}
+                  {% set vlink = "viewer?" ~ view(anatpath, 'brain_warp') ~ "&" ~ view(funcpath, 'zstat1', "intense%20red-blue") %}
+                  <a href={{ vlink }}><img src="{{ path }}/zstat1.png"></a>
+              {% else %}
+              <img src="{{ path }}/zstat1.png"><br>
+              {% endif %}
           {% endif %}
         {% endfor %}
       {% endif %}
