@@ -4,7 +4,6 @@ import os.path as op
 from glob import glob
 import argparse
 import subprocess as sp
-import numpy as np
 import pandas as pd
 
 from flask import Flask, request, render_template, send_file
@@ -30,8 +29,6 @@ app = Flask(__name__)
 
 def basic_info():
     """Basic information needed before any report options are set."""
-    lyman_dir = os.environ["LYMAN_DIR"]
-
     subjects_size = min(len(subjects), 10)
 
     runs = range(1, exp["n_runs"] + 1)
@@ -164,12 +161,15 @@ def viewer():
     names = request.args.getlist("name")
     palettes = request.args.getlist("palette")
     signs = request.args.getlist("sign")
-
+    
     datazip = zip(urls, names, palettes, signs)
     for data in datazip:
         viewdata.append(dict(zip(["url", "name", "palette", "sign"], data)))
 
     info["viewdata"] = viewdata
+
+    info["source"] = request.args.get("source")
+    info["contrast"] = request.args.get("contrast")
 
     return render_template("viewer.html", **info)
 
