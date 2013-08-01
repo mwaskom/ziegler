@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% macro view(path, name, palette='grayscale', sign='both') -%}
-    url={{ path }}/{{ name }}.nii.gz&name={{ name }}&palette={{ palette }}&sign={{ sign }}
+  url={{ path }}/{{ name }}.nii.gz&name={{ name }}&palette={{ palette }}&sign={{ sign }}&pos_thresh={{ palette | thresh_pos }}&neg_thresh={{ palette | thresh_neg }}
 {%- endmacro %}
 
 {% block report %}

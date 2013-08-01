@@ -28,6 +28,8 @@
           'name': "{{ data.name }}",
           'colorPalette': "{{ data.palette }}",
           'sign': "{{ data.sign }}",
+          'positiveThreshold': {{ data.pos_thresh }},
+          'negativeThreshold': {{ data.neg_thresh }},
           'cache': true
         } {% if not loop.last %},{% endif %}
       {% endfor %}

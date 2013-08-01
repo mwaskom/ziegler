@@ -161,10 +161,14 @@ def viewer():
     names = request.args.getlist("name")
     palettes = request.args.getlist("palette")
     signs = request.args.getlist("sign")
-    
-    datazip = zip(urls, names, palettes, signs)
+    pos_threshes = request.args.getlist("pos_thresh")
+    neg_threshes = request.args.getlist("neg_thresh")
+
+    datazip = zip(urls, names, palettes, signs, pos_threshes, neg_threshes)
     for data in datazip:
-        viewdata.append(dict(zip(["url", "name", "palette", "sign"], data)))
+        keys = ["url", "name", "palette", "sign", "pos_thresh", "neg_thresh"]
+        data_dict = dict(zip(keys, data))
+        viewdata.append(data_dict)
 
     info["viewdata"] = viewdata
 
@@ -192,9 +196,19 @@ def cluster_csv_to_html(csv_file):
     return html
 
 
+@app.template_filter("thresh_pos")
+def thresh_pos(palette):
+  return 0 if palette == "grayscale" else 2.3
+
+@app.template_filter("thresh_neg")
+def thresh_neg(palette):
+  return 0 if palette == "grayscale" else -2.3
+
+
 def request_to_info(req, info):
     """Given a request multidict, populate the info dict."""
-    keys = ["subjects", "preproc", "model", "ffx", "rois", "group", "contrasts"]
+    keys = ["subjects", "preproc", "model", "ffx",
+            "rois", "group", "contrasts"]
     for key in keys:
         info[key] = req.getlist(key)
     info["space"] = req.get("space", "")
