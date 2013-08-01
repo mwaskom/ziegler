@@ -128,7 +128,7 @@
         {% if "zstat" in group %}
           <h4>Z-Stat Image<h4>
           {% set anatpath = "static/nsviewer/example/data/" %}
-          {% set vlink = "viewer?source=" ~ groupname ~ "&contrast=" ~ contrast ~ "&" ~ view(anatpath, 'MNI152') ~ "&" ~ view(path, 'zstat1', "intense%20red-blue") %}
+          {% set vlink = "viewer?source=" ~ groupname ~ "&contrast=" ~ contrast ~ "&" ~ view(anatpath, 'MNI152') ~ "&" ~ view(path, 'zstat1_threshold', "red", "positive") %}
           <a href={{ vlink }}><img src="{{ path }}/zstat1_threshold.png"></a>
           <br>
         {% endif %}
