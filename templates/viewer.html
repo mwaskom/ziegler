@@ -30,6 +30,7 @@
           'sign': "{{ data.sign }}",
           'positiveThreshold': {{ data.pos_thresh }},
           'negativeThreshold': {{ data.neg_thresh }},
+          'visible': {{ data.visible }},
           'cache': true
         } {% if not loop.last %},{% endif %}
       {% endfor %}

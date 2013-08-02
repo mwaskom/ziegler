@@ -161,12 +161,13 @@ def viewer():
     names = request.args.getlist("name")
     palettes = request.args.getlist("palette")
     signs = request.args.getlist("sign")
+    visibles = request.args.getlist("visible")
     pos_threshes = request.args.getlist("pos_thresh")
     neg_threshes = request.args.getlist("neg_thresh")
 
-    datazip = zip(urls, names, palettes, signs, pos_threshes, neg_threshes)
+    datazip = zip(urls, names, palettes, signs, visibles, pos_threshes, neg_threshes)
     for data in datazip:
-        keys = ["url", "name", "palette", "sign", "pos_thresh", "neg_thresh"]
+        keys = ["url", "name", "palette", "sign", "visible", "pos_thresh", "neg_thresh"]
         data_dict = dict(zip(keys, data))
         viewdata.append(data_dict)
 
