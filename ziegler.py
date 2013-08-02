@@ -184,8 +184,11 @@ def cluster_csv_to_html(csv_file):
     try:
         df = pd.read_csv(str(csv_file), index_col="Peak")
     except IOError:
-        print "Could not read " + csv_file
-        return ""
+        return "<p>Could not read %s </p><br>" % csv_file
+
+    if not len(df):
+        return "<p>No significant clusters</p><br>"
+
     df = df.reset_index()
     df["Peak"] += 1
     html = df.to_html(index=False, classes=["table",
