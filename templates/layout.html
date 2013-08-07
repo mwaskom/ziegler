@@ -67,10 +67,13 @@
             {% if any_model %}
               <div class=selector_group>
                 <legend>Timeseries Model</legend>
-                <select multiple="multiple" name=model id=model>
+                <select multiple="multiple" size=7 name=model id=model>
                   <option value=design_mat>Design Matrix</option>
-                  <option value=design_corr>Design Correlation</option>
-                  <option value=residuals>Model Residuals</option>
+                  <option value=confound_corr>Confound Correlation</option>
+                  <option value=svd>Singular Values</option>
+                  <option value=residuals>Model Error</option>
+                  <option value=r2s>Model Fit</option>
+                  <option value=filter>Contrast Spectrum</option>
                   <option value=zstats>Z-Stat Images</option>
                 </select>
               </div>

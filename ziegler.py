@@ -119,8 +119,8 @@ def generate_report(arg1=None, arg2=None):
             info["subjects"] = [] if arg1 is None else [arg1]
             info["preproc"] = ["realign", "mc_target", "mean_func",
                                "art", "coreg", "anatwarp"]
-            info["model"] = ["design_mat", "design_corr",
-                             "residuals", "zstats"]
+            info["model"] = ["design_mat", "confound_corr", "svd",
+                             "residuals", "r2s", "filter", "zstats"]
             info["ffx"] = ["mask", "zstat"]
             info["space"] = "mni" if arg2 is None else arg2
             info["contrasts"] = info["all_contrasts"]

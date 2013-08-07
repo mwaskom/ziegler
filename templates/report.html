@@ -60,19 +60,34 @@
             <h5>Design Matrix</h5><br>
             <img src="{{ path }}/design.png"><br>
           {% endif %}
-          {% if "design_corr" in model %}
-            <h5>Design Correlation</h5><br>
+          {% if "confound_corr" in model %}
+            <h5>Confound Correlation</h5><br>
             <img src="{{ path }}/design_correlation.png"><br>
           {% endif %}
+          {% if "svd" in model %}
+            <h5>Singular Values</h5>
+            <img src="{{ path }}/design_singular_values.png"><br>
+          {% endif %}
           {% if "residuals" in model %}
-            <h5>Model Residuals</h5><br>
+            <h5>Model Error</h5><br>
             <img src="{{ path }}/sigmasquareds.png"><br>
           {% endif %}
-          {% if "zstats" in model %}
-            <h5>Z-Stat Images</h5><br>
+          {% if "r2s" in model %}
+            <h5>Model Fit</h5>
+            {% for comp in ["full", "main", "confound"] %}
+              <h6>{{ comp | capitalize }} model R squared</h6>
+              <img src="{{ path }}/r2_{{ comp }}.png"><br>
+            {% endfor %}
+          {% endif %}
+          {% if "zstats" in model or "filter" in model %}
             {% for contrast in contrasts %}
-              <h6>Contrast: {{ contrast }}</h6>
-              <img src="{{ path }}/zstat{{ loop.index }}.png"><br>
+              <h5>Contrast: {{ contrast }}</h6>
+              {% if "filter" in model %}
+                <img src="{{ path }}/cope{{ loop.index}}_filter.png"><br>
+              {% endif %}
+              {% if "zstats" in model %}
+                <img src="{{ path }}/zstat{{ loop.index }}.png"><br>
+              {% endif %}
             {% endfor %}
           {% endif %}
         {% endfor %}
