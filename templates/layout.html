@@ -111,17 +111,6 @@
               </div>
             {% endif %}
 
-            {% if any_contrasts %}
-              <div class=selector_group>
-                <legend>Contrasts</legend>
-                <select multiple="multiple" size={{ contrast_size }} name=contrasts id=contrasts>
-                  {% for contrast in all_contrasts %}
-                    <option value="{{ contrast }}">{{ contrast }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-            {% endif %}
-
             {% if any_group %}
               <div class=selector_group>
                 <legend>Group Analyses</legend>
@@ -135,6 +124,17 @@
                 </select>
                 <input type="text" name="groupname" class=input-block-level id=groupname
                        placeholder="group analysis output name">
+              </div>
+            {% endif %}
+
+            {% if any_contrasts %}
+              <div class=selector_group>
+                <legend>Contrasts</legend>
+                <select multiple="multiple" size={{ contrast_size }} name=contrasts id=contrasts>
+                  {% for contrast in all_contrasts %}
+                    <option value="{{ contrast }}" selected="selected">{{ contrast }}</option>
+                  {% endfor %}
+                </select>
               </div>
             {% endif %}
 
@@ -180,6 +180,10 @@
       $("#ffx:hidden").slideToggle(200);
       {% if all_rois %}$("#rois:hidden").slideToggle(200);{% endif %}
     })
+
+    $("#model").change(function() {
+      $("#contrasts:hidden").slideToggle(200);
+      })
 
     $("#ffx").change(function() {
       $("#ffxspace:hidden").slideToggle(200);
