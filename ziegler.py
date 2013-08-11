@@ -121,7 +121,7 @@ def generate_report(arg1=None, arg2=None):
                                "art", "coreg", "anatwarp"]
             info["model"] = ["design_mat", "confound_corr", "svd",
                              "residuals", "r2s", "filter", "zstats"]
-            info["ffx"] = ["mask", "zstat"]
+            info["ffx"] = ["mask", "r2s", "zstat"]
             info["space"] = "mni" if arg2 is None else arg2
             info["contrasts"] = info["all_contrasts"]
 

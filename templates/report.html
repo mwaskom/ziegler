@@ -95,27 +95,32 @@
 
       {% if ffx %}
         <h3>Fixed Effects</h3>
-        {% for contrast in contrasts %}
-          {% set path = "static/analysis/" ~ subj ~ "/ffx/" ~ space ~ "/smoothed/" ~ contrast %}
-          {% if "mask" in ffx %}
-            {% if loop.first %}
-              <h5>Mask Overlap</h5><br>
-              <img src="{{ path }}/mask_overlap.png"><br>
-            {% endif %}
-          {% endif %}
-          {% if "zstat" in ffx %}
+        {% set path = "static/analysis/" ~ subj ~ "/ffx/" ~ space ~ "/smoothed/" %}
+        {% if "mask" in ffx %}
+          <h4>Mask Overlap</h4><br>
+          <img src="{{ path }}/mask_overlap.png"><br>
+        {% endif %}
+        {% if "r2s" in ffx %}
+          <h4>Model Fit</h4>
+          <h5>Full Model R Squared</h5><br>
+          <img src="{{ path }}/r2_full.png"><br>
+          <h5>Main Model R Squared</h5><br>
+          <img src="{{ path }}/r2_main.png"><br>
+        {% endif %}
+        {% if "zstat" in ffx %}
+          {% for contrast in contrasts %}
+            {% set path = "static/analysis/" ~ subj ~ "/ffx/" ~ space ~ "/smoothed/" ~ contrast %}
             <h4>Contrast: {{ contrast }}</h4><br>
             <h5>Z-Stat Image</h5><br>
               {% if space == "mni" %}
                   {% set anatpath = "static/data/" ~ subj ~ "/normalization/" %}
-                  {% set funcpath = path ~ "/stats/" %}
-                  {% set vlink = "viewer?source=" ~ subj ~ "&contrast=" ~ contrast ~ "&" ~ view(anatpath, 'brain_warp') ~ "&" ~ view(funcpath, 'zstat1', "intense%20red-blue") %}
+                  {% set vlink = "viewer?source=" ~ subj ~ "&contrast=" ~ contrast ~ "&" ~ view(anatpath, 'brain_warp') ~ "&" ~ view(path, 'zstat1', "intense%20red-blue") %}
                   <a href={{ vlink }}><img src="{{ path }}/zstat1.png"></a>
               {% else %}
               <img src="{{ path }}/zstat1.png"><br>
               {% endif %}
-          {% endif %}
-        {% endfor %}
+          {% endfor %}
+        {% endif %}
       {% endif %}
 
       {% if rois %}
