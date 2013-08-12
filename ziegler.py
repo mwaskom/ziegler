@@ -46,7 +46,7 @@ def basic_info():
     any_ffx = bool(glob("static/analysis/*/ffx"))
     any_rois = bool(glob("static/data/*/masks"))
     any_group = op.exists("static/analysis/group")
-    any_contrasts = any_ffx or any_group
+    any_contrasts = any_model or any_ffx or any_group
 
     return dict(all_subjects=subjects,
                 subjects_size=subjects_size,
