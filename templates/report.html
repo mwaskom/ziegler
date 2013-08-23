@@ -135,7 +135,7 @@
     {% endfor %}
 
     {% if group %}
-      <h2>Group Analysis</h2>
+      <h2>Group Analysis ({{ groupname }})</h2>
       {% for contrast in contrasts %}
         {% set path = "static/analysis/" ~ groupname ~ "/" ~ space ~ "/" ~ contrast %}
         {% if "mask" in group %}
