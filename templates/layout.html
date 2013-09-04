@@ -49,17 +49,27 @@
               </select>
             </div>
 
+            {% if any_anatomy %}
+              <div class=selector_group>
+                <legend>Anatomy</legend>
+                <select multiple="multiple" size=3 name=anatomy id=anatomy>
+                  <option value=surfaces>Inflated Surfaces</option>
+                  <option value=brainmask>Freesurfer Volume</option>
+                  <option value=anatwarp>FNIRT Normalization</option>
+                </select>
+              </div>
+            {% endif %}
+
             {% if any_preproc %}
               <div class=selector_group>
                 <legend>Preprocessing</legend>
-                <select multiple="multiple" size=7 name=preproc id=preproc>
+                <select multiple="multiple" size=6 name=preproc id=preproc>
                   <option value=mc_target>Motion Correction Target</option>
                   <option value=realign>Realignment Parameters</option>
                   <option value=brain_mask>Brain Mask</option>
                   <option value=mean_func>Mean BOLD Intensity</option>
                   <option value=artifacts>Artifact Detection</option>
                   <option value=coreg>Coregistration</option>
-                  <option value=anatwarp>Normalization</option>
                 </select>
               </div>
             {% endif %}

@@ -41,6 +41,8 @@ def basic_info():
     all_rois = sorted(list(set(all_rois)))
     roi_size = min(len(all_rois), 10)
 
+    any_anatomy = (bool(glob("static/data/*/snapshots")) or 
+                   bool(glob("static/data/*/normalization")))
     any_preproc = bool(glob("static/analysis/*/preproc"))
     any_model = bool(glob("static/analysis/*/model"))
     any_ffx = bool(glob("static/analysis/*/ffx"))
@@ -55,6 +57,7 @@ def basic_info():
                 contrast_size=contrast_size,
                 all_rois=all_rois,
                 roi_size=roi_size,
+                any_anatomy=any_anatomy,
                 any_preproc=any_preproc,
                 any_model=any_model,
                 any_ffx=any_ffx,
@@ -115,8 +118,9 @@ def generate_report(arg1=None, arg2=None):
         # Populate info for a subject report
         elif arg1 is not None:
             info["subjects"] = [] if arg1 is None else [arg1]
+            info["anatomy"] = ["surfaces", "volume", "anatwarp"]
             info["preproc"] = ["realign", "mc_target", "mean_func",
-                               "art", "coreg", "anatwarp"]
+                               "art", "coreg"]
             info["model"] = ["design_mat", "confound_corr", "svd",
                              "residuals", "r2s", "filter", "zstats"]
             info["ffx"] = ["mask", "r2s", "zstat"]
@@ -163,9 +167,11 @@ def viewer():
     pos_threshes = request.args.getlist("pos_thresh")
     neg_threshes = request.args.getlist("neg_thresh")
 
-    datazip = zip(urls, names, palettes, signs, visibles, pos_threshes, neg_threshes)
+    datazip = zip(urls, names, palettes, signs, visibles,
+                  pos_threshes, neg_threshes)
     for data in datazip:
-        keys = ["url", "name", "palette", "sign", "visible", "pos_thresh", "neg_thresh"]
+        keys = ["url", "name", "palette", "sign", "visible",
+                "pos_thresh", "neg_thresh"]
         data_dict = dict(zip(keys, data))
         viewdata.append(data_dict)
 
@@ -200,16 +206,17 @@ def cluster_csv_to_html(csv_file):
 
 @app.template_filter("thresh_pos")
 def thresh_pos(palette):
-  return 0 if palette == "grayscale" else 2.3
+    return 0 if palette == "grayscale" else 2.3
+
 
 @app.template_filter("thresh_neg")
 def thresh_neg(palette):
-  return 0 if palette == "grayscale" else -2.3
+   return 0 if palette == "grayscale" else -2.3
 
 
 def request_to_info(req, info):
     """Given a request multidict, populate the info dict."""
-    keys = ["subjects", "preproc", "model", "ffx",
+    keys = ["subjects", "anatomy", "preproc", "model", "ffx",
             "rois", "group", "contrasts"]
     for key in keys:
         info[key] = req.getlist(key)

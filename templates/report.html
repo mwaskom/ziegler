@@ -9,6 +9,26 @@
     {% for subj in subjects %}
       <h2>{{ subj }}</h2>
 
+      {% if anatomy %}
+        {% set path = "static/data/" ~ subj %}
+        <h3>Anatomy</h3>
+        {% if "surfaces" in anatomy %}
+          <h4>Inflated Surfaces</h4>
+          <img src="{{ path }}/snapshots/lh.surface_lat.png">
+          <img src="{{ path }}/snapshots/lh.surface_med.png"><br>
+          <img src="{{ path }}/snapshots/rh.surface_lat.png">
+          <img src="{{ path }}/snapshots/rh.surface_med.png"><br>
+        {% endif %}
+        {% if "brainmask" in anatomy %}
+          <h4>Freesurfer Volume</h4>
+          <img src="{{ path }}/snapshots/volume.png"><br>
+        {% endif %}
+        {% if "anatwarp" in anatomy %}
+          <h4>FNIRT Normalization</h4>
+          <img src="{{ path }}/normalization/warp_report.png">
+        {% endif %}
+      {% endif %}
+
       {% if preproc %}
         <h3>Preprocessing</h3>
 
