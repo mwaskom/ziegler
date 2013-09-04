@@ -19,9 +19,20 @@
           <img width=395 src="{{ path }}/snapshots/rh.surface_lat.png">
           <img width=395 src="{{ path }}/snapshots/rh.surface_med.png"><br>
         {% endif %}
+        {% if "surfwarp" in anatomy %}
+          <h4>Surface Normalization</h4>
+          <img width=395 src="{{ path }}/snapshots/lh.surf_warp_lat.png">
+          <img width=395 src="{{ path }}/snapshots/lh.surf_warp_med.png"><br>
+          <img width=395 src="{{ path }}/snapshots/rh.surf_warp_lat.png">
+          <img width=395 src="{{ path }}/snapshots/rh.surf_warp_med.png"><br>
+        {% endif %}
         {% if "brainmask" in anatomy %}
           <h4>Freesurfer Volume</h4>
           <img src="{{ path }}/snapshots/volume.png"><br>
+        {% endif %}
+        {% if "aseg" in anatomy %}
+          <h4>Automated Segmentation</h4>
+          <img src="{{ path }}/snapshots/aseg.png"><br>
         {% endif %}
         {% if "anatwarp" in anatomy %}
           <h4>FNIRT Normalization</h4>

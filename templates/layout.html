@@ -52,9 +52,11 @@
             {% if any_anatomy %}
               <div class=selector_group>
                 <legend>Anatomy</legend>
-                <select multiple="multiple" size=3 name=anatomy id=anatomy>
+                <select multiple="multiple" size=5 name=anatomy id=anatomy>
                   <option value=surfaces>Inflated Surfaces</option>
+                  <option value=surfwarp>Surface Normalization</option>
                   <option value=brainmask>Freesurfer Volume</option>
+                  <option value=aseg>Automated Segmentation</option>
                   <option value=anatwarp>FNIRT Normalization</option>
                 </select>
               </div>

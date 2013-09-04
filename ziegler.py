@@ -120,7 +120,8 @@ def generate_report(arg1=None, arg2=None):
         # Populate info for a subject report
         elif arg1 is not None:
             info["subjects"] = [] if arg1 is None else [arg1]
-            info["anatomy"] = ["surfaces", "volume", "anatwarp"]
+            info["anatomy"] = ["surfaces", "surfwarp", "volume",
+                               "aseg", "anatwarp"]
             info["preproc"] = ["realign", "mc_target", "mean_func",
                                "art", "coreg"]
             info["model"] = ["design_mat", "confound_corr", "svd",
