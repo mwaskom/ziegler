@@ -46,6 +46,10 @@
             <h5>Realignment Parameters</h3>
             <img src="{{ path }}/realignment_plots.png"><br>
           {% endif %}
+          {% if "artifacts" in preproc %}
+            <h5>Artifact Detection</h3>
+            <img src="{{ path }}/artifact_detection.png"><br>
+          {% endif %}
           {% if "brain_mask" in preproc %}
             <h5>Brain Mask</h3>
             <img src="{{ path }}/functional_mask.png"><br>
@@ -53,10 +57,6 @@
           {% if "mean_func" in preproc %}
             <h5>Mean BOLD Intensity</h3>
             <img src="{{ path }}/mean_func.png"><br>
-          {% endif %}
-          {% if "artifacts" in preproc %}
-            <h5>Artifact Detection</h3>
-            <img src="{{ path }}/artifact_detection.png"><br>
           {% endif %}
           {% if "coreg" in preproc %}
             <h5>Anatomical Coregistration</h3>
