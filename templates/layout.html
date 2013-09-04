@@ -177,6 +177,7 @@
 
 <script>
   $(document).ready(function() {
+    $("#anatomy").hide()
     $("#preproc").hide()
     $("#model").hide();
     $("#ffx").hide();
@@ -186,6 +187,7 @@
     $("#contrasts").hide();
 
     $("#subjects").change(function (){
+      $("#anatomy:hidden").slideToggle(200);
       $("#preproc:hidden").slideToggle(200);
       $("#model:hidden").slideToggle(200);
       $("#ffx:hidden").slideToggle(200);
