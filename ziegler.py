@@ -41,18 +41,19 @@ def basic_info():
     contrasts = exp["contrast_names"]
     contrast_size = len(contrasts)
 
-    all_rois = glob("static/data/*/masks/*.png")
+    src_root = "static/" + exp_name
+    all_rois = glob(src_root + "/data/*/masks/*.png")
     all_rois = [op.splitext(op.basename(m))[0] for m in all_rois]
     all_rois = sorted(list(set(all_rois)))
     roi_size = min(len(all_rois), 10)
 
-    any_anatomy = (bool(glob("static/data/*/snapshots")) or
-                   bool(glob("static/data/*/normalization")))
-    any_preproc = bool(glob("static/analysis/*/preproc"))
-    any_model = bool(glob("static/analysis/*/model"))
-    any_ffx = bool(glob("static/analysis/*/ffx"))
-    any_rois = bool(glob("static/data/*/masks"))
-    any_group = bool(glob("static/analysis/*/mni"))
+    any_anatomy = (bool(glob(src_root + "/data/*/snapshots")) or
+                   bool(glob(src_root + "/data/*/normalization")))
+    any_preproc = bool(glob(src_root + "/analysis/*/preproc"))
+    any_model = bool(glob(src_root + "/analysis/*/model"))
+    any_ffx = bool(glob(src_root + "/analysis/*/ffx"))
+    any_rois = bool(glob(src_root + "/data/*/masks"))
+    any_group = bool(glob(src_root + "/analysis/*/mni"))
     any_contrasts = any_model or any_ffx or any_group
 
     return dict(all_subjects=subjects,
@@ -242,17 +243,21 @@ def request_to_info(req, info):
 def link_source():
     """Link source directories to static/."""
     unlink_source()
-    os.symlink(op.join(project["analysis_dir"], args.experiment),
-               "static/analysis")
-    os.symlink(project["data_dir"], "static/data")
+    os.mkdir("static/" + exp_name)
+    os.symlink(op.join(project["analysis_dir"], exp_name),
+               "static/%s/analysis" % exp_name)
+    os.symlink(project["data_dir"], "static/%s/data" % exp_name)
 
 
 def unlink_source():
     """Remove source directories from static/, if they exist."""
-    if op.exists("static/data"):
-        os.unlink("static/data")
-    if op.exists("static/analysis"):
-        os.unlink("static/analysis")
+    root = "static/" + exp_name
+    if op.exists(root):
+        for sub_dir in ["data", "analysis"]:
+            path = "%s/%s" % (root, sub_dir)
+            if op.exists(path):
+                os.unlink(path)
+        os.rmdir(root)
 
 
 def clean_up():

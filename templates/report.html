@@ -10,7 +10,7 @@
       <h2>{{ subj }}</h2>
 
       {% if anatomy %}
-        {% set path = "static/data/" ~ subj %}
+        {% set path = "static/" ~ experiment ~ "/data/" ~ subj %}
         <h3>Anatomy</h3>
         {% if "surfaces" in anatomy %}
           <h4>Inflated Surfaces</h4>
@@ -47,7 +47,7 @@
           {% if preproc != ["anatwarp"] %}
             <h4>Run {{ run }}</h4><br>
           {% endif %}
-        {% set path = "static/analysis/" ~ subj ~ "/preproc/run_" ~ run %}
+        {% set path = "static/" ~ experiment ~ "/analysis/" ~ subj ~ "/preproc/run_" ~ run %}
           {% if "mc_target" in preproc %}
             <h5>Motion Correction Target</h3>
             <img src="{{ path }}/example_func.png"></a>
@@ -77,7 +77,7 @@
 
         {% if "anatwarp" in preproc %}
           <h5>Normalization</h4><br>
-          <img src="/static/data/{{ subj }}/normalization/warp_report.png"><br>
+          <img src="/static/{{ experiment }}/data/{{ subj }}/normalization/warp_report.png"><br>
         {% endif %}
 
       {% endif %}
@@ -85,7 +85,7 @@
       {% if model %}
         <h3>Timeseries Model</h3>
         {% for run in runs %}
-          {% set path = "static/analysis/" ~ subj ~ "/model/smoothed/run_" ~ run %}
+          {% set path = "static/" ~ experiment ~ "/analysis/" ~ subj ~ "/model/smoothed/run_" ~ run %}
           <h4>Run {{ run }}</h4><br>
           {% if "design_mat" in model %}
             <h5>Design Matrix</h5><br>
@@ -126,7 +126,7 @@
 
       {% if ffx %}
         <h3>Fixed Effects</h3>
-        {% set path = "static/analysis/" ~ subj ~ "/ffx/" ~ space ~ "/smoothed/" %}
+        {% set path = "static/" ~ experiment ~ "/analysis/" ~ subj ~ "/ffx/" ~ space ~ "/smoothed/" %}
         {% if "mask" in ffx %}
           <h4>Mask Overlap</h4><br>
           <img src="{{ path }}/mask_overlap.png"><br>
@@ -140,11 +140,11 @@
         {% endif %}
         {% if "zstat" in ffx %}
           {% for contrast in contrasts %}
-            {% set path = "static/analysis/" ~ subj ~ "/ffx/" ~ space ~ "/smoothed/" ~ contrast %}
+            {% set path = "static/" ~ experiment ~ "/analysis/" ~ subj ~ "/ffx/" ~ space ~ "/smoothed/" ~ contrast %}
             <h4>Contrast: {{ contrast }}</h4><br>
             <h5>Z-Stat Image</h5><br>
               {% if space == "mni" %}
-                  {% set anatpath = "static/data/" ~ subj ~ "/normalization/" %}
+                  {% set anatpath = "static/" ~ experiment ~ "/data/" ~ subj ~ "/normalization/" %}
                   {% set vlink = "viewer?source=" ~ subj ~ "&contrast=" ~ contrast ~ "&" ~ view(anatpath, 'brain_warp') ~ "&" ~ view(path, 'zstat1', "intense%20red-blue") %}
                   <a href={{ vlink }}><img src="{{ path }}/zstat1.png"></a>
               {% else %}
@@ -155,7 +155,7 @@
       {% endif %}
 
       {% if rois %}
-        {% set path = "static/data/" ~ subj ~ "/masks" %}
+        {% set path = "static/" ~ experiment ~ "/data/" ~ subj ~ "/masks" %}
         <h3>ROI Masks</h3>
         {% for roi in rois %}
           <h4>{{ roi }}</h4>
@@ -168,7 +168,7 @@
     {% if group %}
       <h2>Group Analysis ({{ groupname }})</h2>
       {% for contrast in contrasts %}
-        {% set path = "static/analysis/" ~ groupname ~ "/" ~ space ~ "/" ~ contrast %}
+        {% set path = "static/" ~ experiment ~ "/analysis/" ~ groupname ~ "/" ~ space ~ "/" ~ contrast %}
         {% if "mask" in group %}
           {% if loop.first %}
             <h4>Group Mask</h4><br>
