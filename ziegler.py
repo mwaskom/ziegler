@@ -41,7 +41,7 @@ def basic_info():
     all_rois = sorted(list(set(all_rois)))
     roi_size = min(len(all_rois), 10)
 
-    any_anatomy = (bool(glob("static/data/*/snapshots")) or 
+    any_anatomy = (bool(glob("static/data/*/snapshots")) or
                    bool(glob("static/data/*/normalization")))
     any_preproc = bool(glob("static/analysis/*/preproc"))
     any_model = bool(glob("static/analysis/*/model"))
@@ -95,6 +95,10 @@ def generate_report(arg1=None, arg2=None):
                                              or form.getlist("group")):
                     continue
                 elif key == "groupname" and not form.getlist("group"):
+                    continue
+                elif key == "contrasts" and not (form.getlist("model")
+                                                 or form.getlist("ffx")
+                                                 or form.getlist("group")):
                     continue
                 for value in form.getlist(key):
                     args += "%s=%s&" % (key, value)
@@ -214,7 +218,7 @@ def thresh_pos(palette):
 
 @app.template_filter("thresh_neg")
 def thresh_neg(palette):
-   return 0 if palette == "grayscale" else -2.3
+    return 0 if palette == "grayscale" else -2.3
 
 
 def request_to_info(req, info):
