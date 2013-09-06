@@ -82,8 +82,6 @@ def home():
 
 
 @app.route("/report", methods=["GET", "POST"])
-@app.route("/report/<arg1>", methods=["GET", "POST"])
-@app.route("/report/<arg1>/<arg2>", methods=["GET", "POST"])
 def generate_report(arg1=None, arg2=None):
     """Build the main report."""
     info = basic_info()
@@ -91,7 +89,7 @@ def generate_report(arg1=None, arg2=None):
 
     if request.method == "POST":
         form = request.form
-    else:
+    elif request.method == "GET":
         form = request.args
 
     # Generate a url for the report
