@@ -87,65 +87,38 @@ def home():
 def generate_report(arg1=None, arg2=None):
     """Build the main report."""
     info = basic_info()
+    info["report"] = True
 
     if request.method == "POST":
-
-        # Possibly generate a url for the report
         form = request.form
-        if form.get("btn", "") == "Generate With Link":
-            args = ""
-            for key in form:
-                if key == "btn":
-                    continue
-                elif key == "space" and not (form.getlist("ffx")
-                                             or form.getlist("group")):
-                    continue
-                elif key == "groupname" and not form.getlist("group"):
-                    continue
-                elif key == "contrasts" and not (form.getlist("model")
-                                                 or form.getlist("ffx")
-                                                 or form.getlist("group")):
-                    continue
-                for value in form.getlist(key):
-                    args += "%s=%s&" % (key, value)
-            url = request.url + "?" + args
-            info["report_url"] = unicode(url)
-
-        # Populate info off the form values
-        info = request_to_info(request.form, info)
-
     else:
+        form = request.args
 
-        # Populate info for a group report
-        if arg1 == "group":
-            info["group"] = ["mask", "zstat", "peaktable",
-                             "peakimage", "boxplot", "watershed"]
-            info["groupname"] = "group"
-            info["space"] = "mni"
-            if arg2 is None:
-                info["contrasts"] = info["all_contrasts"]
-            else:
-                info["contrasts"] = [arg2]
+    # Generate a url for the report
+    # This cannot be the right way to do this
+    args = ""
+    for key in form:
+        if key == "btn":
+            continue
+        elif key == "space" and not (form.getlist("ffx")
+                                     or form.getlist("group")):
+            continue
+        elif key == "groupname" and not form.getlist("group"):
+            continue
+        elif key == "contrasts" and not (form.getlist("model")
+                                         or form.getlist("ffx")
+                                         or form.getlist("group")):
+            continue
+        for value in form.getlist(key):
+            args += "%s=%s&" % (key, value)
+    url = request.url + "?" + args
+    info["report_url"] = unicode(url)
 
-        # Populate info for a subject report
-        elif arg1 is not None:
-            info["subjects"] = [] if arg1 is None else [arg1]
-            info["anatomy"] = ["surfaces", "surfwarp", "volume",
-                               "aseg", "anatwarp"]
-            info["preproc"] = ["realign", "mc_target", "mean_func",
-                               "art", "coreg"]
-            info["model"] = ["design_mat", "confound_corr", "svd",
-                             "residuals", "r2s", "filter", "zstats"]
-            info["ffx"] = ["mask", "r2s", "zstat"]
-            info["space"] = "mni" if arg2 is None else arg2
-            info["contrasts"] = info["all_contrasts"]
-
-        # Populate info off the arguments
-        else:
-            info = request_to_info(request.args, info)
+    # Populate the info dict
+    info = request_to_info(form, info)
 
     # Possibly generate a PDF
-    if request.form.get("btn", "") == "Download PDF Report":
+    if form.get("pdf", "no") == "yes":
         info["reportonly"] = True
         html = render_template("report.html", **info)
         html = html.replace("/static", "static")

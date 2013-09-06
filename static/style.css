@@ -15,6 +15,7 @@ div.selector {
 
   width: 200px;
   height: 100%;
+  margin-top: 50px;
   margin-left: 15px;
   margin-bottom: 30px;
   position: absolute;
@@ -22,19 +23,10 @@ div.selector {
 
   }
 
-div.header {
-
-  height: 45px;
-  width: 200px;
-  text-align: center;
-  position: absolute;
-
-  }
-
 div.report {
 
   text-align: left;
-  margin-top: 5px;
+  margin-top: 40px;
   margin-left: 235px;
   position: absolute;
   width: 800px;
@@ -45,7 +37,7 @@ div.report {
 div.viewer {
 
   text-align: left;
-  margin-top: 5px;
+  margin-top: 40px;
   margin-left: 255px;
   position: absolute;
   width: 800px;
@@ -59,15 +51,14 @@ select {
 
   }
 
-form#mainform {
-
-  margin-top: 100px;
-  height: 95%;
-
-  }
-
 div.submit-gen {
 
   height: 95px;
+
+  }
+
+div.navbar-inner {
+
+  height: 30px;
 
   }

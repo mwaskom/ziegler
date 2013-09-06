@@ -32,17 +32,36 @@
   <body>
     <div class=documentwrapper>
       {% if not reportonly %}
-        <div class=selector>
-          <div class=header>
-              <h1>Ziegler</h1>
-              <p>Experiment: {{ experiment }}</p>
+        <div class="navbar navbar-inverse navbar-fixed-top">
+          <div class="navbar-inner">
+            <div class="container">
+              <ul class="nav">
+                <li><a class="brand" href="http://github.com/mwaskom/ziegler" target="_blank">Ziegler</a></li>
+                <li><a>Experiment: {{ experiment }}</a></li>
+              </ul>
+              {% if report %}
+                <a class="btn btn-inverse pull-right" href="{{ report_url }}pdf=yes" target="_blank">Download PDF</a>
+                <ul class="nav pull-right">
+                  <li>
+                    <form class="navbar-form">
+                      <div class="input-prepend">
+                        <span class="add-on">Share Report:</span>
+                        <input id="share_link" type="text" value={{ report_url }}></input>
+                      </div>
+                    </form>
+                  </li>
+                </ul>
+              {% endif %}
+            </div>
           </div>
+        </div>
+        <div class=selector>
 
           <form action={{ url_for('generate_report') }} method=post id=mainform>
 
             <div class=selector_group>
               <legend>Subjects</legend>
-              <select multiple="multiple" size={{ subjects_size }} name=subjects id=subjects>
+              <select multiple size={{ subjects_size }} name=subjects id=subjects>
                 {% for subj in all_subjects %}
                   <option value="{{ subj }}">{{ subj }}</option>
                 {% endfor %}
@@ -52,7 +71,7 @@
             {% if any_anatomy %}
               <div class=selector_group>
                 <legend>Anatomy</legend>
-                <select multiple="multiple" size=5 name=anatomy id=anatomy>
+                <select multiple size=5 name=anatomy id=anatomy>
                   <option value=surfaces>Inflated Surfaces</option>
                   <option value=surfwarp>Surface Normalization</option>
                   <option value=brainmask>Freesurfer Volume</option>
@@ -65,7 +84,7 @@
             {% if any_preproc %}
               <div class=selector_group>
                 <legend>Preprocessing</legend>
-                <select multiple="multiple" size=6 name=preproc id=preproc>
+                <select multiple size=6 name=preproc id=preproc>
                   <option value=mc_target>Motion Correction Target</option>
                   <option value=realign>Realignment Parameters</option>
                   <option value=artifacts>Artifact Detection</option>
@@ -79,7 +98,7 @@
             {% if any_model %}
               <div class=selector_group>
                 <legend>Timeseries Model</legend>
-                <select multiple="multiple" size=7 name=model id=model>
+                <select multiple size=7 name=model id=model>
                   <option value=design_mat>Design Matrix</option>
                   <option value=confound_corr>Confound Correlation</option>
                   <option value=svd>Singular Values</option>
@@ -94,7 +113,7 @@
             {% if any_ffx %}
               <div class=selector_group>
                 <legend>Fixed Effects</legend>
-                <select multiple="multiple" name=ffx id=ffx>
+                <select multiple name=ffx id=ffx>
                   <option value=mask>Mask Overlap</option>
                   <option value=r2s>Model Fit</option>
                   <option value=zstat>Z-Stat Image</option>
@@ -116,7 +135,7 @@
             {% if any_rois %}
               <div class=selector_group>
                 <legend>ROI Masks</legend>
-                <select multiple="multiple" name=rois id=rois>
+                <select multiple name=rois id=rois>
                   {% for roi in all_rois %}
                     <option value="{{ roi }}">{{ roi }}</option>
                   {% endfor %}
@@ -127,7 +146,7 @@
             {% if any_group %}
               <div class=selector_group>
                 <legend>Group Analyses</legend>
-                <select multiple="multiple" size=6 name=group id=group>
+                <select multiple size=6 name=group id=group>
                   <option value=mask>Group Mask</option>
                   <option value=zstat>Z-Stat Image</option>
                   <option value=peaktable>Activation Peak Table</option>
@@ -143,7 +162,7 @@
             {% if any_contrasts %}
               <div class=selector_group>
                 <legend>Contrasts</legend>
-                <select multiple="multiple" size={{ contrast_size }} name=contrasts id=contrasts>
+                <select multiple size={{ contrast_size }} name=contrasts id=contrasts>
                   {% for contrast in all_contrasts %}
                     <option value="{{ contrast }}" selected="selected">{{ contrast }}</option>
                   {% endfor %}
@@ -152,9 +171,7 @@
             {% endif %}
 
             <div class="submit-gen">
-              <input class="btn-block btn-primary" type=submit name=btn value="Generate Report">
-              <input class="btn-block" type=submit name=btn value="Generate With Link">
-              <input class="btn-block" type=submit name=btn value="Download PDF Report">
+              <input class="btn btn-block btn-primary" type=submit name=btn value="Generate Report">
             </div>
           </form>
         </div>
@@ -163,11 +180,6 @@
       {% block report %}{% endblock %}
 
       {% block viewer %}{% endblock %}
-
-      {% if report_url %}
-        <script>window.prompt("Copy this URL for a link to the report",
-                              '{{ report_url | safe }}');</script>
-      {% endif %}
 
       {% if pandocfail %}
         <script>window.alert("Failed to generate PDF.\n" +
