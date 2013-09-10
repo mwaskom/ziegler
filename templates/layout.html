@@ -177,7 +177,7 @@
                 <legend>Contrasts</legend>
                 <select multiple size={{ contrast_size }} name=contrasts id=contrasts>
                   {% for contrast in all_contrasts %}
-                    <option value="{{ contrast }}" selected="selected">{{ contrast }}</option>
+                    <option value="{{ contrast }}">{{ contrast }}</option>
                   {% endfor %}
                 </select>
                 <button id="contrasts-toggle" class="btn btn-all select-toggle">All</button>
