@@ -1,6 +1,7 @@
 import os
 import sys
 import os.path as op
+import pprint
 from glob import glob
 import argparse
 import subprocess as sp
@@ -165,6 +166,15 @@ def viewer():
     info["contrast"] = request.args.get("contrast")
 
     return render_template("viewer.html", **info)
+
+
+@app.route("/experiment")
+def experiment():
+    info = basic_info()
+    exp_string = pprint.pformat(exp)
+    return render_template("experiment.html",
+                           experiment_parameters=exp_string,
+                           **info)
 
 
 @app.template_filter("csv_to_html")

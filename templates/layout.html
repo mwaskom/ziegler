@@ -41,7 +41,7 @@
             <div class="container">
               <ul class="nav">
                 <li><a class="brand" href="http://github.com/mwaskom/ziegler" target="_blank">Ziegler</a></li>
-                <li><a>Experiment: {{ experiment }}</a></li>
+                <li><a href={{ url_for('experiment') }}>Experiment: {{ experiment }}</a></li>
               </ul>
               {% if report %}
                 <a class="btn btn-inverse pull-right" href="{{ report_url }}pdf=yes" target="_blank">Download PDF</a>
@@ -194,6 +194,8 @@
       {% block report %}{% endblock %}
 
       {% block viewer %}{% endblock %}
+
+      {% block experiment %}{% endblock %}
 
       {% if pandocfail %}
         <script>window.alert("Failed to generate PDF.\n" +
