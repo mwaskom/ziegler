@@ -4,10 +4,14 @@
   <head>
     <link rel="stylesheet" media="screen"
           href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <link rel="stylesheet" media="screen"
+          href="{{ url_for('static', filename='bootstrap-multiselect/css/bootstrap-multiselect.css') }}">
     <link rel=stylesheet type=text/css
           href="{{ url_for('static', filename='style.css') }}">
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap.js"></script>
+    <script type="text/javascript" src="static/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
 
     {% if javascript %}
       <link rel=stylesheet type=text/css
@@ -37,7 +41,7 @@
             <div class="container">
               <ul class="nav">
                 <li><a class="brand" href="http://github.com/mwaskom/ziegler" target="_blank">Ziegler</a></li>
-                <li><a>Experiment: {{ experiment }}</a></li>
+                <li><a href={{ url_for('experiment') }}>Experiment: {{ experiment }}</a></li>
               </ul>
               {% if report %}
                 <a class="btn btn-inverse pull-right" href="{{ report_url }}pdf=yes" target="_blank">Download PDF</a>
@@ -66,18 +70,20 @@
                   <option value="{{ subj }}">{{ subj }}</option>
                 {% endfor %}
               </select>
+              <button id="subjects-toggle" class="btn btn-all select-toggle">All</button>
             </div>
 
             {% if any_anatomy %}
               <div class=selector_group>
                 <legend>Anatomy</legend>
-                <select multiple size=5 name=anatomy id=anatomy>
+                <select multiple="multiple" name=anatomy id=anatomy>
                   <option value=surfaces>Inflated Surfaces</option>
                   <option value=surfwarp>Surface Normalization</option>
                   <option value=brainmask>Freesurfer Volume</option>
                   <option value=aseg>Automated Segmentation</option>
                   <option value=anatwarp>FNIRT Normalization</option>
                 </select>
+                <button id="anatomy-toggle" class="btn btn-all select-toggle">All</button>
               </div>
             {% endif %}
 
@@ -92,6 +98,7 @@
                   <option value=mean_func>Mean BOLD Intensity</option>
                   <option value=coreg>Coregistration</option>
                 </select>
+                <button id="preproc-toggle" class="btn btn-all select-toggle">All</button>
               </div>
             {% endif %}
 
@@ -107,6 +114,7 @@
                   <option value=filter>Contrast Spectrum</option>
                   <option value=zstats>Z-Stat Images</option>
                 </select>
+                <button id="model-toggle" class="btn btn-all select-toggle">All</button>
               </div>
             {% endif %}
 
@@ -118,6 +126,7 @@
                   <option value=r2s>Model Fit</option>
                   <option value=zstat>Z-Stat Image</option>
                 </select>
+                <button id="ffx-toggle" class="btn btn-all select-toggle">All</button>
                 <fieldset id=ffxspace>
                   <label class="radio inline">
                     <input type="radio" name="space" value="mni" checked>
@@ -140,6 +149,7 @@
                     <option value="{{ roi }}">{{ roi }}</option>
                   {% endfor %}
                 </select>
+                <button id="rois-toggle" class="btn btn-all select-toggle">All</button>
               </div>
             {% endif %}
 
@@ -154,24 +164,28 @@
                   <option value=boxplot>COPE Distributions</option>
                   <option value=watershed>Watershed Segmentation</option>
                 </select>
-                <input type="text" name="groupname" class=input-block-level id=groupname
-                       placeholder="group analysis output name">
+                <button id="group-toggle" class="btn btn-all select-toggle">All</button>
+                <div style="margin-top: 5px">
+                  <input type="text" name="groupname" class=input-block-level id=groupname
+                         placeholder="group analysis output name">
+                </div>
               </div>
             {% endif %}
 
             {% if any_contrasts %}
-              <div class=selector_group>
+              <div class="selector_group dropup">
                 <legend>Contrasts</legend>
                 <select multiple size={{ contrast_size }} name=contrasts id=contrasts>
                   {% for contrast in all_contrasts %}
-                    <option value="{{ contrast }}" selected="selected">{{ contrast }}</option>
+                    <option value="{{ contrast }}">{{ contrast }}</option>
                   {% endfor %}
                 </select>
+                <button id="contrasts-toggle" class="btn btn-all select-toggle">All</button>
               </div>
             {% endif %}
 
             <div class="submit-gen">
-              <input class="btn btn-block btn-primary" type=submit name=btn value="Generate Report">
+              <input class="btn btn-block btn-go" type=submit name=btn value="Generate Report">
             </div>
           </form>
         </div>
@@ -181,6 +195,8 @@
 
       {% block viewer %}{% endblock %}
 
+      {% block experiment %}{% endblock %}
+
       {% if pandocfail %}
         <script>window.alert("Failed to generate PDF.\n" +
                              "Do you have Pandoc and Latex installed?");</script>
@@ -189,43 +205,79 @@
   </body>
 </html>
 
-<script>
-  $(document).ready(function() {
-    $("#anatomy").hide()
-    $("#preproc").hide()
-    $("#model").hide();
-    $("#ffx").hide();
-    $("#ffxspace").hide();
-    $("#rois").hide();
-    $("#groupname").hide();
-    $("#contrasts").hide();
-
-    $("#subjects").change(function (){
-      $("#anatomy:hidden").slideToggle(200);
-      $("#preproc:hidden").slideToggle(200);
-      $("#model:hidden").slideToggle(200);
-      $("#ffx:hidden").slideToggle(200);
-      {% if all_rois %}$("#rois:hidden").slideToggle(200);{% endif %}
-    })
-
-    $("#model").change(function() {
-      $("#contrasts:hidden").slideToggle(200);
-      })
-
-    $("#ffx").change(function() {
-      $("#ffxspace:hidden").slideToggle(200);
-      $("#contrasts:hidden").slideToggle(200);
-      })
-
-    $("#group").change(function () {
-      $("#groupname:hidden").slideToggle(200);
-      $("#contrasts:hidden").slideToggle(200);
-      })
-
-    $(function(){
-      $('legend').click(function(){
-        $(this).siblings().slideDown(200);
-      });
+<script type="text/javascript">
+  /**
+  * Gets whether all the options are selected
+  * @param {jQuery} $el
+  * @returns {bool}
+  */
+  function multiselect_selected($el) {
+    var ret = true;
+    $('option', $el).each(function(element) {
+      if (!!!$(this).attr('selected')) {
+        ret = false;
+      }
     });
+    return ret;
+  }
+
+  /**
+  * Selects all the options
+  * @param {jQuery} $el
+  * @returns {undefined}
+  */
+  function multiselect_selectAll($el) {
+    $('option', $el).each(function(element) {
+      $el.multiselect('select', $(this).val());
+    });
+    console.log($('option[selected]', $el).length)
+  }
+  /**
+  * Deselects all the options
+  * @param {jQuery} $el
+  * @returns {undefined}
+  */
+  function multiselect_deselectAll($el) {
+    $('option', $el).each(function(element) {
+      $el.multiselect('deselect', $(this).val());
+    });
+    console.log($('option[selected]', $el).length)
+  }
+   
+  /**
+  * Clears all the selected options
+  * @param {jQuery} $el
+  * @returns {undefined}
+  */
+  function multiselect_toggle($el, $btn) {
+    if (multiselect_selected($el)) {
+      multiselect_deselectAll($el);
+      $btn.text("All");
+    }
+    else {
+      multiselect_selectAll($el);
+      $btn.text("None");
+    }
+  }
+  
+  $(document).ready(function() {
+    {% for section in ["subjects", "anatomy", "preproc", "model", "ffx", "rois", "group", "contrasts"] %}
+      $('#{{ section }}').multiselect({
+        buttonWidth: '140px',
+        buttonText: function(options) {
+          if (options.length == 0) {
+            return '{{ section | capitalize }}   <b class="caret"></b>';
+          }
+          else {
+            return options.length + ' selected  <b class="caret"></b>';
+          }
+        }
+      });
+      $('#{{ section }}-toggle').click(function(e) {
+        e.preventDefault();
+        multiselect_toggle($("#{{ section }}"), $(this));
+      });
+    {% endfor %}
   })
+
 </script>
