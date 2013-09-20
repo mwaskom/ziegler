@@ -1,6 +1,6 @@
 [submodule "static/nsviewer"]
 	path = static/nsviewer
-	url = git://github.com:neurosynth/nsviewer.git
+	url = git://github.com/neurosynth/nsviewer.git
 [submodule "static/bootstrap-multiselect"]
 	path = static/bootstrap-multiselect
 	url = git://github.com/davidstutz/bootstrap-multiselect
