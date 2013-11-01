@@ -197,13 +197,12 @@
         {% endif %}
         {% if "watershed" in group %}
           <h4>Watershed Segmentation (Experimental)</h4><br>
-          <img src="{{ path }}/"><br>
-          <img width=395 src="{{ path }}/lh.zstat1_threshold.png">
-          <img width=395 src="{{ path }}/rh.zstat1_threshold.png"><br>
+          <img src="{{ path }}/zstat1_threshold_seg.png"><br>
         {% endif %}
         {% if "surface" in group %}
           <h4>Surface Projectsion</h4><br>
-          <img src="{{ path }}/zstat1_threshold_seg.png"><br>
+          <img width=395 src="{{ path }}/snapshots/lh.surface_lat.png">
+          <img width=395 src="{{ path }}/snapshots/lh.surface_med.png"><br>
         {% endif %}
       {% endfor %}
     {% endif %}
