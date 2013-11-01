@@ -127,13 +127,13 @@
                   <option value=zstat>Z-Stat Image</option>
                 </select>
                 <button id="ffx-toggle" class="btn btn-all select-toggle">All</button>
-                <fieldset id=ffxspace>
+                <fieldset id=ffxregspace>
                   <label class="radio inline">
-                    <input type="radio" name="space" value="mni" checked>
+                    <input type="radio" name="ffxspace" value="mni" checked>
                     MNI
                     </label>
                   <label class="radio inline">
-                    <input type="radio" name="space" value="epi">
+                    <input type="radio" name="ffxspace" value="epi">
                     EPI
                   </label>
                   <br>
@@ -170,6 +170,17 @@
                   <input type="text" name="groupname" class=input-block-level id=groupname
                          placeholder="group analysis output name">
                 </div>
+                <fieldset id=groupregspace>
+                  <label class="radio inline">
+                    <input type="radio" name="groupspace" value="mni" checked>
+                    MNI
+                    </label>
+                  <label class="radio inline">
+                    <input type="radio" name="groupspace" value="fsaverage">
+                    FSaverage
+                  </label>
+                  <br>
+                </fieldset>
               </div>
             {% endif %}
 

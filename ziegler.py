@@ -57,10 +57,13 @@ def basic_info():
     any_group = bool(glob(src_root + "/analysis/*/mni"))
     any_contrasts = any_model or any_ffx or any_group
 
+    hemis = ["lh", "rh"]
+
     return dict(all_subjects=subjects,
                 subjects_size=subjects_size,
                 experiment=exp_name,
                 runs=runs,
+                hemis=hemis,
                 all_contrasts=contrasts,
                 contrast_size=contrast_size,
                 all_rois=all_rois,
@@ -99,8 +102,9 @@ def generate_report(arg1=None, arg2=None):
     for key in form:
         if key == "btn":
             continue
-        elif key == "space" and not (form.getlist("ffx")
-                                     or form.getlist("group")):
+        elif key == "ffxspace" and not form.getlist("ffx"):
+            continue
+        elif key == "groupspace" and not form.getlist("group"):
             continue
         elif key == "groupname" and not form.getlist("group"):
             continue
@@ -214,7 +218,8 @@ def request_to_info(req, info):
             "rois", "group", "contrasts"]
     for key in keys:
         info[key] = req.getlist(key)
-    info["space"] = req.get("space", "")
+    info["ffxspace"] = req.get("ffxspace", "")
+    info["groupspace"] = req.get("groupspace", "")
     groupname = req.get("groupname", "group")
     info["groupname"] = groupname if groupname else "group"
 

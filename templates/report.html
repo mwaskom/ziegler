@@ -126,7 +126,7 @@
 
       {% if ffx %}
         <h3>Fixed Effects</h3>
-        {% set path = "static/" ~ experiment ~ "/analysis/" ~ subj ~ "/ffx/" ~ space ~ "/smoothed/" %}
+        {% set path = "static/" ~ experiment ~ "/analysis/" ~ subj ~ "/ffx/" ~ ffxspace ~ "/smoothed/" %}
         {% if "mask" in ffx %}
           <h4>Mask Overlap</h4><br>
           <img src="{{ path }}/mask_overlap.png"><br>
@@ -140,10 +140,10 @@
         {% endif %}
         {% if "zstat" in ffx %}
           {% for contrast in contrasts %}
-            {% set path = "static/" ~ experiment ~ "/analysis/" ~ subj ~ "/ffx/" ~ space ~ "/smoothed/" ~ contrast %}
+            {% set path = "static/" ~ experiment ~ "/analysis/" ~ subj ~ "/ffx/" ~ ffxspace ~ "/smoothed/" ~ contrast %}
             <h4>Contrast: {{ contrast }}</h4><br>
             <h5>Z-Stat Image</h5><br>
-              {% if space == "mni" %}
+              {% if ffxspace == "mni" %}
                   {% set anatpath = "static/" ~ experiment ~ "/data/" ~ subj ~ "/normalization/" %}
                   {% set vlink = "viewer?source=" ~ subj ~ "&contrast=" ~ contrast ~ "&" ~ view(anatpath, 'brain_warp') ~ "&" ~ view(path, 'zstat1', "intense%20red-blue") %}
                   <a href={{ vlink }}><img src="{{ path }}/zstat1.png"></a>
@@ -168,41 +168,57 @@
     {% if group %}
       <h2>Group Analysis ({{ groupname }})</h2>
       {% for contrast in contrasts %}
-        {% set path = "static/" ~ experiment ~ "/analysis/" ~ groupname ~ "/" ~ space ~ "/" ~ contrast %}
-        {% if "mask" in group %}
-          {% if loop.first %}
-            <h4>Group Mask</h4><br>
-            <img src="{{ path }}/group_mask.png"><br>
+        {% set path = "static/" ~ experiment ~ "/analysis/" ~ groupname ~ "/" ~ groupspace ~ "/" ~ contrast %}
+        {% if groupspace == "mni" %}
+          {% if "mask" in group %}
+            {% if loop.first %}
+              <h4>Group Mask</h4><br>
+              <img src="{{ path }}/group_mask.png"><br>
+            {% endif %}
+          {% endif %}
+          <h3>Contrast: {{ contrast }}</h3>
+          {% if "zstat" in group %}
+            <h4>Z-Stat Image<h4>
+            {% set anatpath = "static/nsviewer/example/data/" %}
+            {% set vlink = "viewer?source=" ~ groupname ~ "&contrast=" ~ contrast ~ "&" ~ view(anatpath, 'MNI152') ~ "&" ~ view(path, 'zstat1', "brown-teal", "both", "false") ~ "&" ~ view(path, 'zstat1_threshold', "red", "positive") %}
+            <a href={{ vlink }}><img src="{{ path }}/zstat1_threshold.png"></a>
+            <br>
+          {% endif %}
+          {% if "peaktable" in group %}
+            <h4>Activation Peak Table</h4><br>
+            {% filter csv_to_html %}{{ path }}/zstat1_localmax.csv{% endfilter %}
+          {% endif %}
+          {% if "peakimg" in group %}
+            <h4>Activation Peak Image</h4><br>
+            <img src="{{ path }}/zstat1_threshold_peaks.png"><br>
+          {% endif %}
+          {% if "boxplot" in group %}
+            <h4>COPE Distributions</h4><br>
+            <img src="{{ path }}/peak_boxplot.png"><br>
+          {% endif %}
+          {% if "watershed" in group %}
+            <h4>Watershed Segmentation (Experimental)</h4><br>
+            <img src="{{ path }}/zstat1_threshold_seg.png"><br>
+          {% endif %}
+          {% if "surface" in group %}
+            <h4>Surface Projection</h4>
+            {% for hemi in hemis %}
+              {% set imgfile = path ~ "/" ~ hemi ~ ".zstat1_threshold.png" %}
+              <a href={{ imgfile }}><img width=395 src={{ imgfile }}></a>
+            {% endfor %}
+            <br>
           {% endif %}
         {% endif %}
-        <h3>Contrast: {{ contrast }}</h3>
-        {% if "zstat" in group %}
-          <h4>Z-Stat Image<h4>
-          {% set anatpath = "static/nsviewer/example/data/" %}
-          {% set vlink = "viewer?source=" ~ groupname ~ "&contrast=" ~ contrast ~ "&" ~ view(anatpath, 'MNI152') ~ "&" ~ view(path, 'zstat1', "brown-teal", "both", "false") ~ "&" ~ view(path, 'zstat1_threshold', "red", "positive") %}
-          <a href={{ vlink }}><img src="{{ path }}/zstat1_threshold.png"></a>
-          <br>
-        {% endif %}
-        {% if "peaktable" in group %}
-          <h4>Activation Peak Table</h4><br>
-          {% filter csv_to_html %}{{ path }}/zstat1_localmax.csv{% endfilter %}
-        {% endif %}
-        {% if "peakimg" in group %}
-          <h4>Activation Peak Image</h4><br>
-          <img src="{{ path }}/zstat1_threshold_peaks.png"><br>
-        {% endif %}
-        {% if "boxplot" in group %}
-          <h4>COPE Distributions</h4><br>
-          <img src="{{ path }}/peak_boxplot.png"><br>
-        {% endif %}
-        {% if "watershed" in group %}
-          <h4>Watershed Segmentation (Experimental)</h4><br>
-          <img src="{{ path }}/zstat1_threshold_seg.png"><br>
-        {% endif %}
-        {% if "surface" in group %}
-          <h4>Surface Projection</h4><br>
-          <img width=395 src="{{ path }}/lh.zstat1_threshold.png">
-          <img width=395 src="{{ path }}/rh.zstat1_threshold.png"><br>
+        {% if groupspace == "fsaverage" %}
+          <h3>Contrast: {{ contrast }}</h3>
+          {% if "zstat" in group %}
+            <h4>Z-Stat Image<h4>
+            {% for hemi in hemis %}
+              {% set imgfile = path ~ "/" ~ hemi ~ "/" ~ hemi ~ ".zstat_threshold.png" %}
+              <a href={{ imgfile }}><img width=395 src={{ imgfile }}></a>
+            {% endfor %}
+            <br>
+          {% endif %}
         {% endif %}
       {% endfor %}
     {% endif %}
