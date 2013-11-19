@@ -202,10 +202,8 @@
           {% endif %}
           {% if "surface" in group %}
             <h4>Surface Projection</h4>
-            {% for hemi in hemis %}
-              {% set imgfile = path ~ "/" ~ hemi ~ ".zstat1_threshold.png" %}
-              <a href={{ imgfile }}><img width=395 src={{ imgfile }}></a>
-            {% endfor %}
+            {% set imgfile = path ~ "/" "zstat1_threshold_surf.png" %}
+            <a href={{ imgfile }}><img width=800 src={{ imgfile }}></a>
             <br>
           {% endif %}
         {% endif %}
