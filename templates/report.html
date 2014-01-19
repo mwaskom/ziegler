@@ -111,14 +111,16 @@
             {% endfor %}
           {% endif %}
           {% if "zstats" in model or "filter" in model %}
-            {% for contrast in contrasts %}
-              <h5>Contrast: {{ contrast }}</h6>
-              {% if "filter" in model %}
-                <img src="{{ path }}/cope{{ loop.index}}_filter.png"><br>
-              {% endif %}
-              {% if "zstats" in model %}
-                <img src="{{ path }}/zstat{{ loop.index }}.png"><br>
-              {% endif %}
+            {% for contrast in all_contrasts %}
+              {% if contrast in contrasts %}
+                <h5>Contrast: {{ contrast }}</h6>
+                {% if "filter" in model %}
+                  <img src="{{ path }}/cope{{ loop.index}}_filter.png"><br>
+                {% endif %}
+                {% if "zstats" in model %}
+                  <img src="{{ path }}/zstat{{ loop.index }}.png"><br>
+                {% endif %}
+              {% endif%}
             {% endfor %}
           {% endif %}
         {% endfor %}
