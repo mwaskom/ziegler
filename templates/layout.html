@@ -59,146 +59,163 @@
 
         <div class=selector>
 
+          <ul class="nav nav-tabs nav-justified" id="selector_tabs">
+            <li class="active"><a href="#subject_selector" data-toggle="tab">Subject</a></li>
+            <li><a href="#group_selector" data-toggle="tab">Group</a></li>
+          </ul>
+
           <form action={{ url_for('generate_report') }} method=post id=mainform>
 
-            <div class=selector_group>
-              <legend>Subjects</legend>
-              <select multiple size={{ subjects_size }} name=subjects id=subjects>
-                {% for subj in all_subjects %}
-                  <option value="{{ subj }}">{{ subj }}</option>
-                {% endfor %}
-              </select>
-              <button id="subjects-toggle" class="btn btn-all select-toggle">All</button>
-            </div>
+            <div class="tab-content">
 
-            {% if any_anatomy %}
-              <div class=selector_group>
-                <legend>Anatomy</legend>
-                <select multiple="multiple" name=anatomy id=anatomy>
-                  <option value=surfaces>Inflated Surfaces</option>
-                  <option value=surfwarp>Surface Normalization</option>
-                  <option value=brainmask>Freesurfer Volume</option>
-                  <option value=aseg>Automated Segmentation</option>
-                  <option value=anatwarp>FNIRT Normalization</option>
-                </select>
-                <button id="anatomy-toggle" class="btn btn-all select-toggle">All</button>
-              </div>
-            {% endif %}
+              <div class="tab-pane active" id="subject_selector">
 
-            {% if any_preproc %}
-              <div class=selector_group>
-                <legend>Preprocessing</legend>
-                <select multiple size=6 name=preproc id=preproc>
-                  <option value=mc_target>Motion Correction Target</option>
-                  <option value=realign>Realignment Parameters</option>
-                  <option value=artifacts>Artifact Detection</option>
-                  <option value=brain_mask>Brain Mask</option>
-                  <option value=mean_func>Mean BOLD Intensity</option>
-                  <option value=coreg>Coregistration</option>
-                </select>
-                <button id="preproc-toggle" class="btn btn-all select-toggle">All</button>
-              </div>
-            {% endif %}
-
-            {% if any_model %}
-              <div class=selector_group>
-                <legend>Timeseries Model</legend>
-                <select multiple size=7 name=model id=model>
-                  <option value=design_mat>Design Matrix</option>
-                  <option value=confound_corr>Confound Correlation</option>
-                  <option value=svd>Singular Values</option>
-                  <option value=residuals>Model Error</option>
-                  <option value=r2s>Model Fit</option>
-                  <option value=filter>Contrast Spectrum</option>
-                  <option value=zstats>Z-Stat Images</option>
-                </select>
-                <button id="model-toggle" class="btn btn-all select-toggle">All</button>
-              </div>
-            {% endif %}
-
-            {% if any_ffx %}
-              <div class=selector_group>
-                <legend>Fixed Effects</legend>
-                <select multiple name=ffx id=ffx>
-                  <option value=mask>Mask Overlap</option>
-                  <option value=r2s>Model Fit</option>
-                  <option value=zstat>Z-Stat Image</option>
-                </select>
-                <button id="ffx-toggle" class="btn btn-all select-toggle">All</button>
-                <fieldset id=ffxregspace>
-                  <label class="radio-inline">
-                    <input type="radio" name="ffxspace" value="mni" checked>
-                    MNI
-                    </label>
-                  <label class="radio-inline">
-                    <input type="radio" name="ffxspace" value="epi">
-                    EPI
-                  </label>
-                  <br>
-                </fieldset>
-              </div>
-            {% endif %}
-
-            {% if any_rois %}
-              <div class=selector_group>
-                <legend>ROI Masks</legend>
-                <select multiple name=rois id=rois>
-                  {% for roi in all_rois %}
-                    <option value="{{ roi }}">{{ roi }}</option>
-                  {% endfor %}
-                </select>
-                <button id="rois-toggle" class="btn btn-all select-toggle">All</button>
-              </div>
-            {% endif %}
-
-            {% if any_group %}
-              <div class=selector_group>
-                <legend>Group Analyses</legend>
-                <select multiple size=6 name=group id=group>
-                  <option value=mask>Group Mask</option>
-                  <option value=zstat>Z-Stat Image</option>
-                  <option value=peaktable>Activation Peak Table</option>
-                  <option value=peakimg>Activation Peak Image</option>
-                  <option value=boxplot>COPE Distributions</option>
-                  <option value=watershed>Watershed Segmentation</option>
-                  <option value=surface>Surface Projection</option>
-                </select>
-                <button id="group-toggle" class="btn btn-all select-toggle">All</button>
-                <div style="margin-top: 5px">
-                  <input type="text" name="groupname" class="form-control" id=groupname
-                         placeholder="group analysis output name">
+                <div class=selector_group>
+                  <legend>Subjects</legend>
+                  <select multiple size={{ subjects_size }} name=subjects id=subjects>
+                    {% for subj in all_subjects %}
+                      <option value="{{ subj }}">{{ subj }}</option>
+                    {% endfor %}
+                  </select>
+                  <button id="subjects-toggle" class="btn btn-all select-toggle">All</button>
                 </div>
-                <fieldset id=groupregspace>
-                  <label class="radio-inline">
-                    <input type="radio" name="groupspace" value="mni" checked>
-                    MNI
-                    </label>
-                  <label class="radio-inline">
-                    <input type="radio" name="groupspace" value="fsaverage">
-                    FSaverage
-                  </label>
-                  <br>
-                </fieldset>
-              </div>
-            {% endif %}
 
-            {% if any_contrasts %}
-              <div class="selector_group dropup">
-                <legend>Contrasts</legend>
-                <select multiple size={{ contrast_size }} name=contrasts id=contrasts>
-                  {% for contrast in all_contrasts %}
-                    <option value="{{ contrast }}">{{ contrast }}</option>
-                  {% endfor %}
-                </select>
-                <button id="contrasts-toggle" class="btn btn-all select-toggle">All</button>
-              </div>
-            {% endif %}
+                {% if any_anatomy %}
+                  <div class=selector_group>
+                    <legend>Anatomy</legend>
+                    <select multiple="multiple" name=anatomy id=anatomy>
+                      <option value=surfaces>Inflated Surfaces</option>
+                      <option value=surfwarp>Surface Normalization</option>
+                      <option value=brainmask>Freesurfer Volume</option>
+                      <option value=aseg>Automated Segmentation</option>
+                      <option value=anatwarp>FNIRT Normalization</option>
+                    </select>
+                    <button id="anatomy-toggle" class="btn btn-all select-toggle">All</button>
+                  </div>
+                {% endif %}
 
-            <div class="submit-gen">
-              <input class="btn btn-block btn-primary" type=submit name=btn value="Generate Report">
+                {% if any_rois %}
+                  <div class=selector_group>
+                    <legend>ROI Masks</legend>
+                    <select multiple name=rois id=rois>
+                      {% for roi in all_rois %}
+                        <option value="{{ roi }}">{{ roi }}</option>
+                      {% endfor %}
+                    </select>
+                    <button id="rois-toggle" class="btn btn-all select-toggle">All</button>
+                  </div>
+                {% endif %}
+
+                {% if any_preproc %}
+                  <div class=selector_group>
+                    <legend>Preprocessing</legend>
+                    <select multiple size=6 name=preproc id=preproc>
+                      <option value=mc_target>Motion Correction Target</option>
+                      <option value=realign>Realignment Parameters</option>
+                      <option value=artifacts>Artifact Detection</option>
+                      <option value=brain_mask>Brain Mask</option>
+                      <option value=mean_func>Mean BOLD Intensity</option>
+                      <option value=coreg>Coregistration</option>
+                    </select>
+                    <button id="preproc-toggle" class="btn btn-all select-toggle">All</button>
+                  </div>
+                {% endif %}
+
+                {% if any_model %}
+                  <div class=selector_group>
+                    <legend>Timeseries Model</legend>
+                    <select multiple size=7 name=model id=model>
+                      <option value=design_mat>Design Matrix</option>
+                      <option value=confound_corr>Confound Correlation</option>
+                      <option value=svd>Singular Values</option>
+                      <option value=residuals>Model Error</option>
+                      <option value=r2s>Model Fit</option>
+                      <option value=filter>Contrast Spectrum</option>
+                      <option value=zstats>Z-Stat Images</option>
+                    </select>
+                    <button id="model-toggle" class="btn btn-all select-toggle">All</button>
+                  </div>
+                {% endif %}
+
+                {% if any_ffx %}
+                  <div class=selector_group>
+                    <legend>Fixed Effects</legend>
+                    <select multiple name=ffx id=ffx>
+                      <option value=mask>Mask Overlap</option>
+                      <option value=r2s>Model Fit</option>
+                      <option value=zstat>Z-Stat Image</option>
+                    </select>
+                    <button id="ffx-toggle" class="btn btn-all select-toggle">All</button>
+                    <fieldset id=ffxregspace>
+                      <label class="radio-inline">
+                        <input type="radio" name="ffxspace" value="mni" checked>
+                        MNI
+                        </label>
+                      <label class="radio-inline">
+                        <input type="radio" name="ffxspace" value="epi">
+                        EPI
+                      </label>
+                      <br>
+                    </fieldset>
+                  </div>
+                {% endif %}
+
+              </div>
+              <div class="tab-pane" id="group_selector">
+
+                {% if any_group %}
+                  <div class=selector_group>
+                    <legend>Group Analyses</legend>
+                    <select multiple size=6 name=group id=group>
+                      <option value=mask>Group Mask</option>
+                      <option value=zstat>Z-Stat Image</option>
+                      <option value=peaktable>Activation Peak Table</option>
+                      <option value=peakimg>Activation Peak Image</option>
+                      <option value=boxplot>COPE Distributions</option>
+                      <option value=watershed>Watershed Segmentation</option>
+                      <option value=surface>Surface Projection</option>
+                    </select>
+                    <button id="group-toggle" class="btn btn-all select-toggle">All</button>
+                    <div style="margin-top: 5px">
+                      <input type="text" name="groupname" class="form-control" id=groupname
+                             placeholder="group analysis output name">
+                    </div>
+                    <fieldset id=groupregspace>
+                      <label class="radio-inline">
+                        <input type="radio" name="groupspace" value="mni" checked>
+                        MNI
+                        </label>
+                      <label class="radio-inline">
+                        <input type="radio" name="groupspace" value="fsaverage">
+                        FSaverage
+                      </label>
+                      <br>
+                    </fieldset>
+                  </div>
+                {% endif %}
+
+              </div>
+
+              {% if any_contrasts %}
+                <div class="selector_group dropup">
+                  <legend>Contrasts</legend>
+                  <select multiple size={{ contrast_size }} name=contrasts id=contrasts>
+                    {% for contrast in all_contrasts %}
+                      <option value="{{ contrast }}">{{ contrast }}</option>
+                    {% endfor %}
+                  </select>
+                  <button id="contrasts-toggle" class="btn btn-all select-toggle">All</button>
+                </div>
+              {% endif %}
+
             </div>
           </form>
+        <div class="submit-gen">
+          <input class="btn btn-block btn-primary" type=submit form=mainform name=btn value="Generate Report">
         </div>
+        </div>
+
+      </div>
       {% endif %}
 
       {% block report %}{% endblock %}
@@ -285,6 +302,10 @@
         e.preventDefault();
         multiselect_toggle($("#{{ section }}"), $(this));
       });
+      $('#selector_tabs a').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+      })
     {% endfor %}
   })
 
