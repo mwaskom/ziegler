@@ -9,8 +9,8 @@
     <link rel=stylesheet type=text/css
           href="{{ url_for('static', filename='style.css') }}">
 
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-    <script type="text/javascript" src="static/bootstrap.js"></script>
+    <script type="text/javascript" src="static/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap.min.js"></script>
     <script type="text/javascript" src="static/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
 
     {% if javascript %}
@@ -225,8 +225,8 @@
   */
   function multiselect_selected($el) {
     var ret = true;
-    $('option', $el).each(function(element) {
-      if (!!!$(this).attr('selected')) {
+    $('option', $el).each(function(index, value) {
+      if (!value.selected) {
         ret = false;
       }
     });
@@ -242,7 +242,6 @@
     $('option', $el).each(function(element) {
       $el.multiselect('select', $(this).val());
     });
-    console.log($('option[selected]', $el).length)
   }
   /**
   * Deselects all the options
@@ -253,7 +252,6 @@
     $('option', $el).each(function(element) {
       $el.multiselect('deselect', $(this).val());
     });
-    console.log($('option[selected]', $el).length)
   }
    
   /**
