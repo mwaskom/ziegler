@@ -126,11 +126,11 @@
                 </select>
                 <button id="ffx-toggle" class="btn btn-all select-toggle">All</button>
                 <fieldset id=ffxregspace>
-                  <label class="radio inline">
+                  <label class="radio-inline">
                     <input type="radio" name="ffxspace" value="mni" checked>
                     MNI
                     </label>
-                  <label class="radio inline">
+                  <label class="radio-inline">
                     <input type="radio" name="ffxspace" value="epi">
                     EPI
                   </label>
@@ -165,15 +165,15 @@
                 </select>
                 <button id="group-toggle" class="btn btn-all select-toggle">All</button>
                 <div style="margin-top: 5px">
-                  <input type="text" name="groupname" class=input-block-level id=groupname
+                  <input type="text" name="groupname" class="form-control" id=groupname
                          placeholder="group analysis output name">
                 </div>
                 <fieldset id=groupregspace>
-                  <label class="radio inline">
+                  <label class="radio-inline">
                     <input type="radio" name="groupspace" value="mni" checked>
                     MNI
                     </label>
-                  <label class="radio inline">
+                  <label class="radio-inline">
                     <input type="radio" name="groupspace" value="fsaverage">
                     FSaverage
                   </label>
@@ -195,7 +195,7 @@
             {% endif %}
 
             <div class="submit-gen">
-              <input class="btn btn-block btn-go" type=submit name=btn value="Generate Report">
+              <input class="btn btn-block btn-primary" type=submit name=btn value="Generate Report">
             </div>
           </form>
         </div>
