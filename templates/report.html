@@ -45,7 +45,7 @@
 
         {% for run in runs %}
           {% if preproc != ["anatwarp"] %}
-            <h4>Run {{ run }}</h4><br>
+            <h4>Run {{ run }}</h4>
           {% endif %}
         {% set path = "static/" ~ experiment ~ "/analysis/" ~ subj ~ "/preproc/run_" ~ run %}
           {% if "mc_target" in preproc %}
@@ -86,13 +86,13 @@
         <h3>Timeseries Model</h3>
         {% for run in runs %}
           {% set path = "static/" ~ experiment ~ "/analysis/" ~ subj ~ "/model/smoothed/run_" ~ run %}
-          <h4>Run {{ run }}</h4><br>
+          <h4>Run {{ run }}</h4>
           {% if "design_mat" in model %}
-            <h5>Design Matrix</h5><br>
+            <h5>Design Matrix</h5>
             <img src="{{ path }}/design.png"><br>
           {% endif %}
           {% if "confound_corr" in model %}
-            <h5>Confound Correlation</h5><br>
+            <h5>Confound Correlation</h5>
             <img src="{{ path }}/design_correlation.png"><br>
           {% endif %}
           {% if "svd" in model %}
@@ -100,7 +100,7 @@
             <img src="{{ path }}/design_singular_values.png"><br>
           {% endif %}
           {% if "residuals" in model %}
-            <h5>Model Error</h5><br>
+            <h5>Model Error</h5>
             <img src="{{ path }}/sigmasquareds.png"><br>
           {% endif %}
           {% if "r2s" in model %}
@@ -130,21 +130,21 @@
         <h3>Fixed Effects</h3>
         {% set path = "static/" ~ experiment ~ "/analysis/" ~ subj ~ "/ffx/" ~ ffxspace ~ "/smoothed/" %}
         {% if "mask" in ffx %}
-          <h4>Mask Overlap</h4><br>
+          <h4>Mask Overlap</h4>
           <img src="{{ path }}/mask_overlap.png"><br>
         {% endif %}
         {% if "r2s" in ffx %}
-          <h4>Model Fit</h4>
-          <h5>Full Model R Squared</h5><br>
+          <br><h4>Model Fit</h4>
+          <h5>Full Model R Squared</h5>
           <img src="{{ path }}/r2_full.png"><br>
-          <h5>Main Model R Squared</h5><br>
+          <h5>Main Model R Squared</h5>
           <img src="{{ path }}/r2_main.png"><br>
         {% endif %}
         {% if "zstat" in ffx %}
           {% for contrast in contrasts %}
             {% set path = "static/" ~ experiment ~ "/analysis/" ~ subj ~ "/ffx/" ~ ffxspace ~ "/smoothed/" ~ contrast %}
-            <h4>Contrast: {{ contrast }}</h4><br>
-            <h5>Z-Stat Image</h5><br>
+            <br><h4>Contrast: {{ contrast }}</h4>
+            <h5>Z-Stat Image</h5>
               {% if ffxspace == "mni" %}
                   {% set anatpath = "static/" ~ experiment ~ "/data/" ~ subj ~ "/normalization/" %}
                   {% set vlink = "viewer?source=" ~ subj ~ "&contrast=" ~ contrast ~ "&" ~ view(anatpath, 'brain_warp') ~ "&" ~ view(path, 'zstat1', "intense%20red-blue") %}
