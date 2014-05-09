@@ -24,7 +24,15 @@ Dependencies
 - [Flask](http://flask.pocoo.org/)
 - [lyman](https://github.com/mwaskom/lyman)
 
-To generate PDF reports, you'll also need to have [pandoc](http://johnmacfarlane.net/pandoc/) and pdflatex installed.
+Using NSViewer
+--------------
+
+Ziegler ships with a link to the [Neurosynth Viewer](https://github.com/neurosynth/nsviewer) for interactively viewing whole-brain activation maps. This is handled through git submodules. When you first clone the ziegler repository, you have to run
+
+    git submodule init
+    git submodule update
+
+to bring in the relevant files.
 
 License
 -------
