@@ -167,7 +167,7 @@
 
     {% endfor %}
 
-    {% if group %}
+    {% if maps or peaks %}
       <h2>Group Analysis ({{ groupname }})</h2>
       {% for contrast in contrasts %}
         {% set path = "static/" ~ experiment ~ "/analysis/" ~ groupname ~ "/" ~ groupspace ~ "/" ~ contrast %}
@@ -196,7 +196,7 @@
             <h4>Activation Peak Table</h4><br>
             {% filter csv_to_html %}{{ path }}/zstat1_localmax.csv{% endfilter %}
           {% endif %}
-          {% if "boxplot" in groupeaks %}
+          {% if "boxplot" in peaks %}
             <h4>COPE Distributions</h4><br>
             <img src="{{ path }}/peak_boxplot.png"><br>
           {% endif %}
@@ -204,14 +204,14 @@
             <h4>Activation Peak Image</h4><br>
             <img src="{{ path }}/zstat1_threshold_peaks.png"><br>
           {% endif %}
-          {% if "watershed" in groupeaks %}
+          {% if "watershed" in peaks %}
             <h4>Watershed Segmentation (Experimental)</h4><br>
             <img src="{{ path }}/zstat1_threshold_seg.png"><br>
           {% endif %}
         {% endif %}
         {% if groupspace == "fsaverage" %}
           <h3>Contrast: {{ contrast }}</h3>
-          {% if "zstat" in group %}
+          {% if "zstat" in maps %}
             <h4>Z-Stat Image<h4>
             {% set imgfile = path ~ "/rh/osgm/zstat_threshold.png" %}
             <a href={{ imgfile }}><img width=800 src={{ imgfile }}></a>

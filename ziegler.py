@@ -108,18 +108,21 @@ def generate_report(arg1=None, arg2=None):
     # Generate a url for the report
     # This cannot be the right way to do this
     args = ""
+    hasgroup = form.getlist("maps") or form.getlist("peaks")
     for key in form:
         if key == "btn":
             continue
+        elif key == "multiselect":
+            continue
         elif key == "ffxspace" and not form.getlist("ffx"):
             continue
-        elif key == "groupspace" and not form.getlist("group"):
+        elif key == "groupspace" and not hasgroup:
             continue
-        elif key == "groupname" and not form.getlist("group"):
+        elif key == "groupname" and not hasgroup:
             continue
         elif key == "contrasts" and not (form.getlist("model")
                                          or form.getlist("ffx")
-                                         or form.getlist("group")):
+                                         or hasgroup):
             continue
         for value in form.getlist(key):
             args += "%s=%s&" % (key, value)
@@ -224,7 +227,7 @@ def thresh_neg(palette):
 def request_to_info(req, info):
     """Given a request multidict, populate the info dict."""
     keys = ["subjects", "anatomy", "preproc", "model", "ffx",
-            "rois", "group", "contrasts"]
+            "rois", "maps", "peaks", "contrasts"]
     for key in keys:
         info[key] = req.getlist(key)
     info["ffxspace"] = req.get("ffxspace", "")
