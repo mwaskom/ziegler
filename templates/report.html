@@ -182,7 +182,7 @@
           {% if "zstat" in maps %}
             <h4>Z-Stat Image<h4>
             {% set anatpath = "static/nsviewer/example/data/" %}
-            {% set vlink = "viewer?source=" ~ groupname ~ "&contrast=" ~ contrast ~ "&" ~ view(anatpath, 'MNI152') ~ "&" ~ view(path, 'zstat1', "brown-teal", "both", "false") ~ "&" ~ view(path, 'zstat1_threshold', "red", "positive") %}
+            {% set vlink = "viewer?source=" ~ groupname ~ "&contrast=" ~ contrast ~ "&" ~ view(anatpath, 'MNI152') ~ "&" ~ view(path, 'zstat1', "intense-red-blue", "both", "false") ~ "&" ~ view(path, 'zstat1_threshold', "red", "positive") %}
             <a href={{ vlink }}><img src="{{ path }}/zstat1_threshold.png"></a>
             <br>
           {% endif %}
