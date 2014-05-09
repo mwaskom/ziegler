@@ -146,17 +146,14 @@
                       <option value=zstat>Z-Stat Image</option>
                     </select>
                     <button id="ffx-toggle" class="btn btn-all select-toggle">All</button>
-                    <fieldset id=ffxregspace>
-                      <label class="radio-inline">
-                        <input type="radio" name="ffxspace" value="mni" checked>
-                        MNI
-                        </label>
-                      <label class="radio-inline">
-                        <input type="radio" name="ffxspace" value="epi">
-                        EPI
-                      </label>
-                      <br>
-                    </fieldset>
+                  </div>
+
+                  <div class="selector_group">
+                    <legend>Common Space</legend>
+                    <select size=2 name=ffxspace id=ffxspace>
+                      <option name="ffxspace" value="mni" selected>MNI</label>
+                      <option name="ffxspace" value="epi">EPI</label>
+                    </select>
                   </div>
                 {% endif %}
 
@@ -164,33 +161,44 @@
               <div class="tab-pane" id="group_selector">
 
                 {% if any_group %}
+
                   <div class=selector_group>
-                    <legend>Group Analyses</legend>
-                    <select multiple size=6 name=group id=group>
+                    <legend>Group Name</legend>
+                    <select size={{ group_size }} name=groupname id=groupname>
+                      <option selected value=group>group</option>
+                      {% for name in group_names[1:] %}
+                        <option value={{ name }}>{{ name }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+
+                  <div class=selector_group>
+                    <legend>Activation Maps</legend>
+                    <select multiple size=3 name=maps id=maps>
                       <option value=mask>Group Mask</option>
                       <option value=zstat>Z-Stat Image</option>
-                      <option value=peaktable>Activation Peak Table</option>
-                      <option value=peakimg>Activation Peak Image</option>
-                      <option value=boxplot>COPE Distributions</option>
-                      <option value=watershed>Watershed Segmentation</option>
                       <option value=surface>Surface Projection</option>
                     </select>
-                    <button id="group-toggle" class="btn btn-all select-toggle">All</button>
-                    <div style="margin-top: 5px">
-                      <input type="text" name="groupname" class="form-control" id=groupname
-                             placeholder="group analysis output name">
-                    </div>
-                    <fieldset id=groupregspace>
-                      <label class="radio-inline">
-                        <input type="radio" name="groupspace" value="mni" checked>
-                        MNI
-                        </label>
-                      <label class="radio-inline">
-                        <input type="radio" name="groupspace" value="fsaverage">
-                        FSaverage
-                      </label>
-                      <br>
-                    </fieldset>
+                    <button id="maps-toggle" class="btn btn-all select-toggle">All</button>
+                  </div>
+
+                  <div class=selector_group>
+                    <legend>Activation Peaks</legend>
+                    <select multiple size=6 name=peaks id=peaks>
+                      <option value=peaktable>Activation Peak Table</option>
+                      <option value=boxplot>COPE Distributions</option>
+                      <option value=peakimg>Activation Peak Image</option>
+                      <option value=watershed>Watershed Segmentation</option>
+                    </select>
+                    <button id="peaks-toggle" class="btn btn-all select-toggle">All</button>
+                  </div>
+
+                  <div class="selector_group">
+                    <legend>Common Space</legend>
+                    <select size=2 name=groupspace id=groupspace>
+                      <option name="groupspace" value="mni" selected>MNI</label>
+                      <option name="groupspace" value="fsaverage">FSaverage</label>
+                    </select>
                   </div>
                 {% endif %}
 
@@ -286,7 +294,7 @@
   }
   
   $(document).ready(function() {
-    {% for section in ["subjects", "anatomy", "preproc", "model", "ffx", "rois", "group", "contrasts"] %}
+    {% for section in ["subjects", "anatomy", "preproc", "model", "ffx", "rois", "maps", "peaks", "contrasts"] %}
       $('#{{ section }}').multiselect({
         buttonWidth: '140px',
         buttonText: function(options) {
@@ -298,15 +306,22 @@
           }
         }
       });
+
       $('#{{ section }}-toggle').click(function(e) {
         e.preventDefault();
         multiselect_toggle($("#{{ section }}"), $(this));
       });
-      $('#selector_tabs a').click(function (e) {
-        e.preventDefault();
-        $(this).tab('show');
-      })
+
     {% endfor %}
+
+    {% for section in ["ffxspace", "groupname", "groupspace"] %}
+      $("#{{ section }}").multiselect({ buttonWidth: '200px' });
+    {% endfor %}
+
+    $('#selector_tabs a').click(function (e) {
+      e.preventDefault();
+      $(this).tab('show');
+    })
   })
 
 </script>

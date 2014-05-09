@@ -172,41 +172,41 @@
       {% for contrast in contrasts %}
         {% set path = "static/" ~ experiment ~ "/analysis/" ~ groupname ~ "/" ~ groupspace ~ "/" ~ contrast %}
         {% if groupspace == "mni" %}
-          {% if "mask" in group %}
+          {% if "mask" in maps %}
             {% if loop.first %}
               <h4>Group Mask</h4><br>
               <img src="{{ path }}/group_mask.png"><br>
             {% endif %}
           {% endif %}
           <h3>Contrast: {{ contrast }}</h3>
-          {% if "zstat" in group %}
+          {% if "zstat" in maps %}
             <h4>Z-Stat Image<h4>
             {% set anatpath = "static/nsviewer/example/data/" %}
             {% set vlink = "viewer?source=" ~ groupname ~ "&contrast=" ~ contrast ~ "&" ~ view(anatpath, 'MNI152') ~ "&" ~ view(path, 'zstat1', "brown-teal", "both", "false") ~ "&" ~ view(path, 'zstat1_threshold', "red", "positive") %}
             <a href={{ vlink }}><img src="{{ path }}/zstat1_threshold.png"></a>
             <br>
           {% endif %}
-          {% if "peaktable" in group %}
-            <h4>Activation Peak Table</h4><br>
-            {% filter csv_to_html %}{{ path }}/zstat1_localmax.csv{% endfilter %}
-          {% endif %}
-          {% if "peakimg" in group %}
-            <h4>Activation Peak Image</h4><br>
-            <img src="{{ path }}/zstat1_threshold_peaks.png"><br>
-          {% endif %}
-          {% if "boxplot" in group %}
-            <h4>COPE Distributions</h4><br>
-            <img src="{{ path }}/peak_boxplot.png"><br>
-          {% endif %}
-          {% if "watershed" in group %}
-            <h4>Watershed Segmentation (Experimental)</h4><br>
-            <img src="{{ path }}/zstat1_threshold_seg.png"><br>
-          {% endif %}
-          {% if "surface" in group %}
+          {% if "surface" in maps %}
             <h4>Surface Projection</h4>
             {% set imgfile = path ~ "/" "zstat1_threshold_surf.png" %}
             <a href={{ imgfile }}><img width=800 src={{ imgfile }}></a>
             <br>
+          {% endif %}
+          {% if "peaktable" in peaks %}
+            <h4>Activation Peak Table</h4><br>
+            {% filter csv_to_html %}{{ path }}/zstat1_localmax.csv{% endfilter %}
+          {% endif %}
+          {% if "boxplot" in groupeaks %}
+            <h4>COPE Distributions</h4><br>
+            <img src="{{ path }}/peak_boxplot.png"><br>
+          {% endif %}
+          {% if "peakimg" in peaks %}
+            <h4>Activation Peak Image</h4><br>
+            <img src="{{ path }}/zstat1_threshold_peaks.png"><br>
+          {% endif %}
+          {% if "watershed" in groupeaks %}
+            <h4>Watershed Segmentation (Experimental)</h4><br>
+            <img src="{{ path }}/zstat1_threshold_seg.png"><br>
           {% endif %}
         {% endif %}
         {% if groupspace == "fsaverage" %}

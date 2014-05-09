@@ -43,18 +43,25 @@ def basic_info():
     contrast_size = len(contrasts)
 
     src_root = "static/" + exp_name
+
     all_rois = glob(src_root + "/data/*/masks/*.png")
     all_rois = [op.splitext(op.basename(m))[0] for m in all_rois]
     all_rois = sorted(list(set(all_rois)))
     roi_size = min(len(all_rois), 10)
+
+    group_names = (glob(src_root + "/analysis/*/mni") +
+                   glob(src_root + "/analysis/*/fsaverage"))
+    group_names = [p.split("/")[-2] for p in group_names]
+    group_names = sorted(list(set(group_names)))
+    group_size = min(len(group_names), 10)
 
     any_anatomy = (bool(glob(src_root + "/data/*/snapshots")) or
                    bool(glob(src_root + "/data/*/normalization")))
     any_preproc = bool(glob(src_root + "/analysis/*/preproc"))
     any_model = bool(glob(src_root + "/analysis/*/model"))
     any_ffx = bool(glob(src_root + "/analysis/*/ffx"))
-    any_rois = bool(glob(src_root + "/data/*/masks"))
-    any_group = bool(glob(src_root + "/analysis/*/mni"))
+    any_rois = bool(all_rois)
+    any_group = bool(group_names)
     any_contrasts = any_model or any_ffx or any_group
 
     hemis = ["lh", "rh"]
@@ -68,6 +75,8 @@ def basic_info():
                 contrast_size=contrast_size,
                 all_rois=all_rois,
                 roi_size=roi_size,
+                group_names=group_names,
+                group_size=group_size,
                 any_anatomy=any_anatomy,
                 any_preproc=any_preproc,
                 any_model=any_model,
@@ -135,8 +144,8 @@ def generate_report(arg1=None, arg2=None):
                              "-o", "report.pdf"])
         except sp.CalledProcessError:
             return render_template("layout.html",
-                                    pandocfail=True,
-                                    **basic_info())
+                                   pandocfail=True,
+                                   **basic_info())
         return send_file("report.pdf")
 
     return render_template("report.html", **info)
