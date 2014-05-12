@@ -145,13 +145,7 @@
             {% set path = "static/" ~ experiment ~ "/analysis/" ~ subj ~ "/ffx/" ~ ffxspace ~ "/smoothed/" ~ contrast %}
             <br><h4>Contrast: {{ contrast }}</h4>
             <h5>Z-Stat Image</h5>
-              {% if ffxspace == "mni" %}
-                  {% set anatpath = "static/" ~ experiment ~ "/data/" ~ subj ~ "/normalization/" %}
-                  {% set vlink = "viewer?source=" ~ subj ~ "&contrast=" ~ contrast ~ "&" ~ view(anatpath, 'brain_warp') ~ "&" ~ view(path, 'zstat1', "intense%20red-blue") %}
-                  <a href={{ vlink }}><img src="{{ path }}/zstat1.png"></a>
-              {% else %}
-              <img src="{{ path }}/zstat1.png"><br>
-              {% endif %}
+            <a href={{ contrast | subject_zstat_viewer(subj, ffxspace) }}><img src="{{ path }}/zstat1.png"></a>
           {% endfor %}
         {% endif %}
       {% endif %}
@@ -181,7 +175,7 @@
           <h3>Contrast: {{ contrast }}</h3>
           {% if "zstat" in maps %}
             <h4>Z-Stat Image<h4>
-            <a href={{ contrast | corrected_mni_viewer }}><img src="{{ path }}/zstat1_threshold.png"></a>
+            <a href={{ contrast | corrected_mni_viewer(groupname) }}><img src="{{ path }}/zstat1_threshold.png"></a>
             <br>
           {% endif %}
           {% if "surface" in maps %}

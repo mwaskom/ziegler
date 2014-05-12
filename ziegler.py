@@ -157,31 +157,23 @@ def generate_report(arg1=None, arg2=None):
 @app.route("/viewer")
 def viewer():
     info = basic_info()
-    info["javascript"] = True
+    info["papaya"] = True
 
-    viewdata = []
-    urls = request.args.getlist("url")
-    names = request.args.getlist("name")
-    palettes = request.args.getlist("palette")
-    signs = request.args.getlist("sign")
-    visibles = request.args.getlist("visible")
-    pos_threshes = request.args.getlist("pos_thresh")
-    neg_threshes = request.args.getlist("neg_thresh")
+    info["anat"] = request.args.get("anat")
+    info["anat_name"] = os.path.basename(info["anat"])
+    info["anat_max"] = request.args.get("anat_max", 100)
+    info["overlay"] = request.args.get("overlay")
+    info["overlay_name"] = os.path.basename(info["overlay"])
+    info["min"] = request.args.get("min", 2)
+    info["max"] = request.args.get("max", 6)
+    info["lut"] = request.args.get("lut", "Reds")
+    info["negative_lut"] = request.args.get("negative_lut", "Blues")
+    info["parametric"] = request.args.get("parametric", "false")
 
-    datazip = zip(urls, names, palettes, signs, visibles,
-                  pos_threshes, neg_threshes)
-    for data in datazip:
-        keys = ["url", "name", "palette", "sign", "visible",
-                "pos_thresh", "neg_thresh"]
-        data_dict = dict(zip(keys, data))
-        viewdata.append(data_dict)
-
-    info["viewdata"] = viewdata
-
-    info["source"] = request.args.get("source")
+    info["name"] = request.args.get("name")
     info["contrast"] = request.args.get("contrast")
 
-    return render_template("viewer.html", **info)
+    return render_template("papaya_head.html", **info)
 
 
 @app.route("/experiment")
@@ -212,6 +204,41 @@ def cluster_csv_to_html(csv_file):
     html = html.replace('border="1"', '')
     html = html.replace('class="dataframe ', 'class="')
     return html
+
+
+@app.template_filter("corrected_mni_viewer")
+def corrected_mni_viewer(contrast, groupname):
+
+    link = "&".join([
+        "lut=Reds",
+        "anat=static/data/MNI152.nii.gz", "anat_max=9000",
+        "name=" + groupname, "contrast=" + contrast,
+        "overlay="
+        "static/{0}/analysis/{1}/mni/{2}/zstat1_threshold.nii.gz".format(
+            exp_name, groupname, contrast)])
+    return "viewer?" + link
+
+
+@app.template_filter("subject_zstat_viewer")
+def subject_zstat_viewer(contrast, subj, space):
+
+    if space == "mni":
+        anat = "static/{0}/data/{1}/normalization/brain_warp.nii.gz".format(
+            exp_name, subj)
+        anat_max = "110"
+    else:
+        anat = "static/{0}/analysis/{1}/preproc/run_1/mean_func.nii.gz".format(
+            exp_name, subj)
+        anat_max = "2500"
+
+    link = "&".join([
+        "lut=OrRd", "negative_lut=PuBu", "max=12", "parametric=true",
+        "anat=" + anat, "anat_max=" + anat_max,
+        "name=" + subj, "contrast=" + contrast,
+        "overlay="
+        "static/{0}/analysis/{1}/ffx/{2}/smoothed/{3}/zstat1.nii.gz".format(
+            exp_name, subj, space, contrast)])
+    return "viewer?" + link
 
 
 @app.template_filter("thresh_pos")
