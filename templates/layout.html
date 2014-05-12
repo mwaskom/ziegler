@@ -289,12 +289,7 @@
       $('#{{ section }}').multiselect({
         buttonWidth: '140px',
         buttonText: function(options) {
-          if (options.length == 0) {
-            return '{{ section | capitalize }}   <b class="caret"></b>';
-          }
-          else {
-            return options.length + ' selected  <b class="caret"></b>';
-          }
+          return options.length + ' selected  <b class="caret"></b>';
         }
       });
 
