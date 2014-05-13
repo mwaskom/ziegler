@@ -7,7 +7,8 @@ import argparse
 import subprocess as sp
 import pandas as pd
 
-from flask import Flask, request, render_template, send_file
+from flask import (Flask, request, render_template,
+                   redirect, send_file)
 
 import lyman
 
@@ -17,24 +18,23 @@ default_exp = project["default_exp"]
 parser = argparse.ArgumentParser()
 parser.add_argument("-subjects", nargs="*")
 parser.add_argument("-experiment", default=default_exp)
-parser.add_argument("-altmodel")
 parser.add_argument("-port", type=int, default=5000)
 parser.add_argument("-external", action="store_true")
 parser.add_argument("-debug", action="store_true")
 args = parser.parse_args(sys.argv[1:])
 
-exp = lyman.gather_experiment_info(args.experiment, args.altmodel)
+exp = lyman.gather_experiment_info(args.experiment)
 subjects = lyman.determine_subjects(args.subjects)
-if args.altmodel is None:
-    exp_name = args.experiment
-else:
-    exp_name = args.experiment + "-" + args.altmodel
+exp_base = args.experiment
 
 app = Flask(__name__)
 
 
-def basic_info():
+def basic_info(experiment=exp_base):
     """Basic information needed before any report options are set."""
+    experiments = list_experiments()
+    exp = experiemnt_info(experiment)
+
     subjects_size = min(len(subjects), 10)
 
     runs = range(1, exp["n_runs"] + 1)
@@ -42,24 +42,24 @@ def basic_info():
     contrasts = exp["contrast_names"]
     contrast_size = len(contrasts)
 
-    src_root = "static/" + exp_name
+    anal_root = op.join("static", exp_base, "analysis", experiment)
+    data_root = op.join("static", exp_base, "data")
 
-    all_rois = glob(src_root + "/data/*/masks/*.png")
+    all_rois = glob(data_root + "/*/masks/*.png")
     all_rois = [op.splitext(op.basename(m))[0] for m in all_rois]
     all_rois = sorted(list(set(all_rois)))
     roi_size = min(len(all_rois), 10)
 
-    group_names = (glob(src_root + "/analysis/*/mni") +
-                   glob(src_root + "/analysis/*/fsaverage"))
+    group_names = glob(anal_root + "/*/mni") + glob(anal_root + "/*/fsaverage")
     group_names = [p.split("/")[-2] for p in group_names]
     group_names = sorted(list(set(group_names)))
     group_size = min(len(group_names), 10)
 
-    any_anatomy = (bool(glob(src_root + "/data/*/snapshots")) or
-                   bool(glob(src_root + "/data/*/normalization")))
-    any_preproc = bool(glob(src_root + "/analysis/*/preproc"))
-    any_model = bool(glob(src_root + "/analysis/*/model"))
-    any_ffx = bool(glob(src_root + "/analysis/*/ffx"))
+    any_anatomy = (bool(glob(data_root + "/*/snapshots")) or
+                   bool(glob(data_root + "/*/normalization")))
+    any_preproc = bool(glob(anal_root + "/*/preproc"))
+    any_model = bool(glob(anal_root + "/*/model"))
+    any_ffx = bool(glob(anal_root + "/*/ffx"))
     any_rois = bool(all_rois)
     any_group = bool(group_names)
     any_contrasts = any_model or any_ffx or any_group
@@ -68,7 +68,9 @@ def basic_info():
 
     return dict(all_subjects=subjects,
                 subjects_size=subjects_size,
-                experiment=exp_name,
+                exp_base=exp_base,
+                experiment=experiment,
+                experiments=experiments,
                 runs=runs,
                 hemis=hemis,
                 all_contrasts=contrasts,
@@ -87,17 +89,41 @@ def basic_info():
                 )
 
 
+def list_experiments():
+
+    lyman_dir = os.environ["LYMAN_DIR"]
+    experiments = glob(op.join(lyman_dir, exp_base + "-*.py"))
+    experiments.append(exp_base)
+    return sorted(op.splitext(op.basename(e))[0] for e in experiments)
+
+
+def experiemnt_info(experiment):
+
+    parts = experiment.split("-")
+    try:
+        exp_base, altmodel = parts
+    except ValueError:
+        exp_base, = parts
+        altmodel = None
+
+    return lyman.gather_experiment_info(exp_base, altmodel)
+
+
 @app.route("/")
-def home():
+def redirect_to_experiment_base():
+    return redirect(exp_base)
+
+@app.route("/<experiment>")
+def home(experiment):
     """Build the selector column."""
-    info = basic_info()
+    info = basic_info(experiment)
     return render_template("layout.html", **info)
 
 
-@app.route("/report", methods=["GET", "POST"])
-def generate_report(arg1=None, arg2=None):
+@app.route("/<experiment>/report", methods=["GET", "POST"])
+def generate_report(experiment):
     """Build the main report."""
-    info = basic_info()
+    info = basic_info(experiment)
     info["report"] = True
 
     if request.method == "POST":
@@ -154,9 +180,9 @@ def generate_report(arg1=None, arg2=None):
     return render_template("report.html", **info)
 
 
-@app.route("/viewer")
-def viewer():
-    info = basic_info()
+@app.route("/<experiment>/viewer")
+def viewer(experiment):
+    info = basic_info(experiment)
     info["papaya"] = True
 
     info["anat"] = request.args.get("anat")
@@ -176,10 +202,10 @@ def viewer():
     return render_template("papaya_head.html", **info)
 
 
-@app.route("/experiment")
-def experiment():
-    info = basic_info()
-    exp_string = pprint.pformat(exp)
+@app.route("/<experiment>/experiment")
+def experiment(experiment):
+    info = basic_info(experiment)
+    exp_string = pprint.pformat(experiemnt_info(experiment))
     return render_template("experiment.html",
                            experiment_parameters=exp_string,
                            **info)
@@ -215,7 +241,7 @@ def corrected_mni_viewer(contrast, groupname):
         "name=" + groupname, "contrast=" + contrast,
         "overlay="
         "static/{0}/analysis/{1}/mni/{2}/zstat1_threshold.nii.gz".format(
-            exp_name, groupname, contrast)])
+            exp_base, groupname, contrast)])
     return "viewer?" + link
 
 
@@ -224,11 +250,11 @@ def subject_zstat_viewer(contrast, subj, space):
 
     if space == "mni":
         anat = "static/{0}/data/{1}/normalization/brain_warp.nii.gz".format(
-            exp_name, subj)
+            exp_base, subj)
         anat_max = "110"
     else:
         anat = "static/{0}/analysis/{1}/preproc/run_1/mean_func.nii.gz".format(
-            exp_name, subj)
+            exp_base, subj)
         anat_max = "2500"
 
     link = "&".join([
@@ -237,7 +263,7 @@ def subject_zstat_viewer(contrast, subj, space):
         "name=" + subj, "contrast=" + contrast,
         "overlay="
         "static/{0}/analysis/{1}/ffx/{2}/smoothed/{3}/zstat1.nii.gz".format(
-            exp_name, subj, space, contrast)])
+            exp_base, subj, space, contrast)])
     return "viewer?" + link
 
 
@@ -268,15 +294,15 @@ def request_to_info(req, info):
 def link_source():
     """Link source directories to static/."""
     unlink_source()
-    os.mkdir("static/" + exp_name)
-    os.symlink(op.join(project["analysis_dir"], exp_name),
-               "static/%s/analysis" % exp_name)
-    os.symlink(project["data_dir"], "static/%s/data" % exp_name)
+    os.mkdir("static/" + exp_base)
+    os.symlink(op.join(project["analysis_dir"]),
+               "static/%s/analysis" % exp_base)
+    os.symlink(project["data_dir"], "static/%s/data" % exp_base)
 
 
 def unlink_source():
     """Remove source directories from static/, if they exist."""
-    root = "static/" + exp_name
+    root = "static/" + exp_base
     if op.exists(root):
         for sub_dir in ["data", "analysis"]:
             path = "%s/%s" % (root, sub_dir)
@@ -304,3 +330,4 @@ if __name__ == "__main__":
         app.run(host=host, debug=args.debug, port=args.port)
     finally:
         clean_up()
+
