@@ -148,7 +148,7 @@
             {% set path = analysis_root ~ "ffx/" ~ ffxspace ~ "/smoothed/" ~ contrast %}
             <br><h4>Contrast: {{ contrast }}</h4>
             <h5>Z-Stat Image</h5>
-            <a href={{ contrast | subject_zstat_viewer(subj, ffxspace) }}><img src="{{ path }}/zstat1.png"></a>
+            <a href={{ contrast | subject_zstat_viewer(experiment, subj, ffxspace) }}><img src="{{ path }}/zstat1.png"></a>
           {% endfor %}
         {% endif %}
       {% endif %}
@@ -171,7 +171,7 @@
           <h3>Contrast: {{ contrast }}</h3>
           {% if "zstat" in maps %}
             <h4>Z-Stat Image<h4>
-            <a href={{ contrast | corrected_mni_viewer(groupname) }}><img src="{{ path }}/zstat1_threshold.png"></a>
+            <a href={{ contrast | corrected_mni_viewer(experiment, groupname) }}><img src="{{ path }}/zstat1_threshold.png"></a>
             <br>
           {% endif %}
           {% if "surface" in maps %}

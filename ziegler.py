@@ -113,6 +113,7 @@ def experiemnt_info(experiment):
 def redirect_to_experiment_base():
     return redirect(exp_base)
 
+
 @app.route("/<experiment>")
 def home(experiment):
     """Build the selector column."""
@@ -233,27 +234,27 @@ def cluster_csv_to_html(csv_file):
 
 
 @app.template_filter("corrected_mni_viewer")
-def corrected_mni_viewer(contrast, groupname):
+def corrected_mni_viewer(contrast, experiment, groupname):
 
     link = "&".join([
         "lut=Reds",
-        "anat=static/data/MNI152.nii.gz", "anat_max=9000",
+        "anat=/static/data/MNI152.nii.gz", "anat_max=9000",
         "name=" + groupname, "contrast=" + contrast,
-        "overlay="
-        "static/{0}/analysis/{1}/mni/{2}/zstat1_threshold.nii.gz".format(
-            exp_base, groupname, contrast)])
+        "overlay=/static/"
+        "{0}/analysis/{1}/{2}/mni/{3}/zstat1_threshold.nii.gz".format(
+            exp_base, experiment, groupname, contrast)])
     return "viewer?" + link
 
 
 @app.template_filter("subject_zstat_viewer")
-def subject_zstat_viewer(contrast, subj, space):
+def subject_zstat_viewer(contrast, experiment, subj, space):
 
     if space == "mni":
-        anat = "static/{0}/data/{1}/normalization/brain_warp.nii.gz".format(
+        anat = "/static/{0}/data/{1}/normalization/brain_warp.nii.gz".format(
             exp_base, subj)
         anat_max = "110"
     else:
-        anat = "static/{0}/analysis/{1}/preproc/run_1/mean_func.nii.gz".format(
+        anat = "/static/{0}/analysis/{1}/preproc/run_1/mean_func.nii.gz".format(
             exp_base, subj)
         anat_max = "2500"
 
@@ -261,9 +262,9 @@ def subject_zstat_viewer(contrast, subj, space):
         "lut=OrRd", "negative_lut=PuBu", "max=12", "parametric=true",
         "anat=" + anat, "anat_max=" + anat_max,
         "name=" + subj, "contrast=" + contrast,
-        "overlay="
-        "static/{0}/analysis/{1}/ffx/{2}/smoothed/{3}/zstat1.nii.gz".format(
-            exp_base, subj, space, contrast)])
+        "overlay=/static/"
+        "{0}/analysis/{1}/{2}/ffx/{3}/smoothed/{4}/zstat1.nii.gz".format(
+            exp_base, experiment, subj, space, contrast)])
     return "viewer?" + link
 
 
@@ -330,4 +331,3 @@ if __name__ == "__main__":
         app.run(host=host, debug=args.debug, port=args.port)
     finally:
         clean_up()
-
