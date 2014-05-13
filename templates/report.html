@@ -1,53 +1,61 @@
 {% extends "layout.html" %}
 
-{% macro view(path, name, palette='grayscale', sign='both', visible='true') -%}
-  url={{ path }}/{{ name }}.nii.gz&name={{ name }}&palette={{ palette }}&sign={{ sign }}&pos_thresh={{ palette | thresh_pos }}&neg_thresh={{ palette | thresh_neg }}&visible={{ visible }}
-{%- endmacro %}
 
 {% block report %}
   <div class="report">
     {% for subj in subjects %}
+
+      {% set data_root = url_for("static", filename=exp_base ~ "/data/" ~ subj) %}
+      {% set preproc_root = url_for("static", filename=exp_base ~ "/analysis/" ~ exp_base ~ "/" ~ subj ~ "/preproc/") %}
+      {% set analysis_root = url_for("static", filename=exp_base ~ "/analysis/" ~ experiment ~ "/" ~ subj ~ "/") %}
+
       <h2>{{ subj }}</h2>
 
       {% if anatomy %}
-        {% set path = "static/" ~ experiment ~ "/data/" ~ subj %}
         <h3>Anatomy</h3>
         {% if "surfaces" in anatomy %}
           <h4>Inflated Surfaces</h4>
-          <img width=395 src="{{ path }}/snapshots/lh.surface_lat.png">
-          <img width=395 src="{{ path }}/snapshots/lh.surface_med.png"><br>
-          <img width=395 src="{{ path }}/snapshots/rh.surface_lat.png">
-          <img width=395 src="{{ path }}/snapshots/rh.surface_med.png"><br>
+          <img width=395 src="{{ data_root }}/snapshots/lh.surface_lat.png">
+          <img width=395 src="{{ data_root }}/snapshots/lh.surface_med.png"><br>
+          <img width=395 src="{{ data_root }}/snapshots/rh.surface_lat.png">
+          <img width=395 src="{{ data_root }}/snapshots/rh.surface_med.png"><br>
         {% endif %}
         {% if "surfwarp" in anatomy %}
           <h4>Surface Normalization</h4>
-          <img width=395 src="{{ path }}/snapshots/lh.surf_warp_lat.png">
-          <img width=395 src="{{ path }}/snapshots/lh.surf_warp_med.png"><br>
-          <img width=395 src="{{ path }}/snapshots/rh.surf_warp_lat.png">
-          <img width=395 src="{{ path }}/snapshots/rh.surf_warp_med.png"><br>
+          <img width=395 src="{{ data_root }}/snapshots/lh.surf_warp_lat.png">
+          <img width=395 src="{{ data_root }}/snapshots/lh.surf_warp_med.png"><br>
+          <img width=395 src="{{ data_root }}/snapshots/rh.surf_warp_lat.png">
+          <img width=395 src="{{ data_root }}/snapshots/rh.surf_warp_med.png"><br>
         {% endif %}
         {% if "brainmask" in anatomy %}
           <h4>Freesurfer Volume</h4>
-          <img src="{{ path }}/snapshots/volume.png"><br>
+          <img src="{{ data_root }}/snapshots/volume.png"><br>
         {% endif %}
         {% if "aseg" in anatomy %}
           <h4>Automated Segmentation</h4>
-          <img src="{{ path }}/snapshots/aseg.png"><br>
+          <img src="{{ data_root }}/snapshots/aseg.png"><br>
         {% endif %}
         {% if "anatwarp" in anatomy %}
           <h4>FNIRT Normalization</h4>
-          <img src="{{ path }}/normalization/warp_report.png">
+          <img src="{{ data_root }}/normalization/warp_report.png">
         {% endif %}
+      {% endif %}
+
+      {% if rois %}
+        <h3>ROI Masks</h3>
+        {% for roi in rois %}
+          <h4>{{ roi }}</h4>
+          <img src="{{ data_root }}/{{ roi }}.png"><br>
+        {% endfor %}
       {% endif %}
 
       {% if preproc %}
         <h3>Preprocessing</h3>
 
         {% for run in runs %}
-          {% if preproc != ["anatwarp"] %}
-            <h4>Run {{ run }}</h4>
-          {% endif %}
-        {% set path = "static/" ~ experiment ~ "/analysis/" ~ subj ~ "/preproc/run_" ~ run %}
+          <h4>Run {{ run }}</h4>
+
+          {% set path = preproc_root ~ "run_" ~ run %}
           {% if "mc_target" in preproc %}
             <h5>Motion Correction Target</h3>
             <img src="{{ path }}/example_func.png"></a>
@@ -75,17 +83,12 @@
           {% endif %}
         {% endfor %}
 
-        {% if "anatwarp" in preproc %}
-          <h5>Normalization</h4><br>
-          <img src="/static/{{ experiment }}/data/{{ subj }}/normalization/warp_report.png"><br>
-        {% endif %}
-
       {% endif %}
 
       {% if model %}
         <h3>Timeseries Model</h3>
         {% for run in runs %}
-          {% set path = "static/" ~ experiment ~ "/analysis/" ~ subj ~ "/model/smoothed/run_" ~ run %}
+          {% set path = analysis_root ~ "model/smoothed/run_" ~ run %}
           <h4>Run {{ run }}</h4>
           {% if "design_mat" in model %}
             <h5>Design Matrix</h5>
@@ -120,7 +123,7 @@
                 {% if "zstats" in model %}
                   <img src="{{ path }}/zstat{{ loop.index }}.png"><br>
                 {% endif %}
-              {% endif%}
+              {% endif %}
             {% endfor %}
           {% endif %}
         {% endfor %}
@@ -128,7 +131,7 @@
 
       {% if ffx %}
         <h3>Fixed Effects</h3>
-        {% set path = "static/" ~ experiment ~ "/analysis/" ~ subj ~ "/ffx/" ~ ffxspace ~ "/smoothed/" %}
+        {% set path = analysis_root + "ffx/" ~ ffxspace ~ "/smoothed/" %}
         {% if "mask" in ffx %}
           <h4>Mask Overlap</h4>
           <img src="{{ path }}/mask_overlap.png"><br>
@@ -142,29 +145,22 @@
         {% endif %}
         {% if "zstat" in ffx %}
           {% for contrast in contrasts %}
-            {% set path = "static/" ~ experiment ~ "/analysis/" ~ subj ~ "/ffx/" ~ ffxspace ~ "/smoothed/" ~ contrast %}
+            {% set path = analysis_root ~ "ffx/" ~ ffxspace ~ "/smoothed/" ~ contrast %}
             <br><h4>Contrast: {{ contrast }}</h4>
             <h5>Z-Stat Image</h5>
-            <a href={{ contrast | subject_zstat_viewer(subj, ffxspace) }}><img src="{{ path }}/zstat1.png"></a>
+            <a href={{ contrast | subject_zstat_viewer(experiment, subj, ffxspace) }}><img src="{{ path }}/zstat1.png"></a>
           {% endfor %}
         {% endif %}
       {% endif %}
 
-      {% if rois %}
-        {% set path = "static/" ~ experiment ~ "/data/" ~ subj ~ "/masks" %}
-        <h3>ROI Masks</h3>
-        {% for roi in rois %}
-          <h4>{{ roi }}</h4>
-          <img src="{{ path }}/{{ roi }}.png"><br>
-        {% endfor %}
-      {% endif %}
-
     {% endfor %}
+
+    {% set group_root = url_for("static", filename=exp_base ~ "/analysis/" ~ experiment ~ "/" ~ groupname ~ "/" ~ groupspace ~ "/") %}
 
     {% if maps or peaks %}
       <h2>Group Analysis ({{ groupname }})</h2>
       {% for contrast in contrasts %}
-        {% set path = "static/" ~ experiment ~ "/analysis/" ~ groupname ~ "/" ~ groupspace ~ "/" ~ contrast %}
+        {% set path = group_root ~ contrast %}
         {% if groupspace == "mni" %}
           {% if "mask" in maps %}
             {% if loop.first %}
@@ -175,7 +171,7 @@
           <h3>Contrast: {{ contrast }}</h3>
           {% if "zstat" in maps %}
             <h4>Z-Stat Image<h4>
-            <a href={{ contrast | corrected_mni_viewer(groupname) }}><img src="{{ path }}/zstat1_threshold.png"></a>
+            <a href={{ contrast | corrected_mni_viewer(experiment, groupname) }}><img src="{{ path }}/zstat1_threshold.png"></a>
             <br>
           {% endif %}
           {% if "surface" in maps %}
