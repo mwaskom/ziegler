@@ -47,9 +47,9 @@ div.viewer {
   text-align: left;
   margin-top: 40px;
   margin-left: 255px;
-  position: absolute;
+  position: fixed;
   width: 800px;
-  height: 100%;
+  height: 90%;
 
   }
 

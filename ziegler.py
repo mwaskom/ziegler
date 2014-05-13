@@ -200,7 +200,7 @@ def viewer(experiment):
     info["name"] = request.args.get("name")
     info["contrast"] = request.args.get("contrast")
 
-    return render_template("papaya_head.html", **info)
+    return render_template("viewer.html", **info)
 
 
 @app.route("/<experiment>/experiment")
