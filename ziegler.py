@@ -23,7 +23,6 @@ parser.add_argument("-external", action="store_true")
 parser.add_argument("-debug", action="store_true")
 args = parser.parse_args(sys.argv[1:])
 
-exp = lyman.gather_experiment_info(args.experiment)
 subjects = lyman.determine_subjects(args.subjects)
 exp_base = args.experiment
 
@@ -33,7 +32,7 @@ app = Flask(__name__)
 def basic_info(experiment=exp_base):
     """Basic information needed before any report options are set."""
     experiments = list_experiments()
-    exp = experiemnt_info(experiment)
+    exp = experiment_info(experiment)
 
     subjects_size = min(len(subjects), 10)
 
@@ -97,7 +96,7 @@ def list_experiments():
     return sorted(op.splitext(op.basename(e))[0] for e in experiments)
 
 
-def experiemnt_info(experiment):
+def experiment_info(experiment):
 
     parts = experiment.split("-")
     try:
@@ -106,7 +105,8 @@ def experiemnt_info(experiment):
         exp_base, = parts
         altmodel = None
 
-    return lyman.gather_experiment_info(exp_base, altmodel)
+    info = lyman.gather_experiment_info(exp_base, altmodel)
+    return info
 
 
 @app.route("/")
@@ -206,7 +206,7 @@ def viewer(experiment):
 @app.route("/<experiment>/experiment")
 def experiment(experiment):
     info = basic_info(experiment)
-    exp_string = pprint.pformat(experiemnt_info(experiment))
+    exp_string = pprint.pformat(experiment_info(experiment))
     return render_template("experiment.html",
                            experiment_parameters=exp_string,
                            **info)
@@ -254,7 +254,8 @@ def subject_zstat_viewer(contrast, experiment, subj, space):
             exp_base, subj)
         anat_max = "110"
     else:
-        anat = "/static/{0}/analysis/{1}/preproc/run_1/mean_func.nii.gz".format(
+        anat = ("/static/{0}/analysis/{1}/preproc/"
+                "run_1/mean_func.nii.gz").format(
             exp_base, subj)
         anat_max = "2500"
 
