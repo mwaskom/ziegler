@@ -17,6 +17,7 @@
 
 
     <title>Ziegler: {{ experiment }}</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
   </head>
 
   <body>
@@ -82,7 +83,7 @@
                       <option value=surfwarp>Surface Normalization</option>
                       <option value=brainmask>Freesurfer Volume</option>
                       <option value=aseg>Automated Segmentation</option>
-                      <option value=anatwarp>FNIRT Normalization</option>
+                      <option value=anatwarp>Volume Normalization</option>
                     </select>
                     <button id="anatomy-toggle" class="btn btn-all select-toggle">All</button>
                   </div>
