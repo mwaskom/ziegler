@@ -250,13 +250,12 @@ def corrected_mni_viewer(contrast, experiment, groupname):
 def subject_zstat_viewer(contrast, experiment, subj, space):
 
     if space == "mni":
-        anat = "/static/{0}/data/{1}/normalization/brain_warp.nii.gz".format(
-            exp_base, subj)
+        anat = ("/static/{0}/data/{1}/normalization/brain_warp.nii.gz"
+                .format(exp_base, subj))
         anat_max = "110"
     else:
-        anat = ("/static/{0}/analysis/{1}/preproc/"
-                "run_1/mean_func.nii.gz").format(
-            exp_base, subj)
+        anat = ("/static/{0}/analysis/{1}/{2}/preproc/run_1/mean_func.nii.gz"
+                .format(exp_base, experiment, subj))
         anat_max = "2500"
 
     link = "&".join([
