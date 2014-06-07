@@ -171,6 +171,11 @@
           <h3>Contrast: {{ contrast }}</h3>
           {% if "zstat" in maps %}
             <h4>Z-Stat Image<h4>
+            <a href={{ contrast | uncorrected_mni_viewer(experiment, groupname) }}><img src="{{ path }}/zstat1.png"></a>
+            <br>
+          {% endif %}
+          {% if "threshzstat" in maps %}
+            <h4>Thresholded Z-Stat Image<h4>
             <a href={{ contrast | corrected_mni_viewer(experiment, groupname) }}><img src="{{ path }}/zstat1_threshold.png"></a>
             <br>
           {% endif %}

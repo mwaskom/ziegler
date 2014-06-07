@@ -238,11 +238,28 @@ def cluster_csv_to_html(csv_file):
 def corrected_mni_viewer(contrast, experiment, groupname):
 
     link = "&".join([
-        "lut=Reds",
+        "lut=OrRd",
         "anat=/static/data/MNI152.nii.gz", "anat_max=9000",
         "name=" + groupname, "contrast=" + contrast,
         "overlay=/static/"
         "{0}/analysis/{1}/{2}/mni/{3}/zstat1_threshold.nii.gz".format(
+            exp_base, experiment, groupname, contrast)])
+    return "viewer?" + link
+
+
+@app.template_filter("uncorrected_mni_viewer")
+def uncorrected_mni_viewer(contrast, experiment, groupname):
+
+    link = "&".join([
+        "lut=warm",
+        "negative_lut=cool",
+        "anat=/static/data/MNI152.nii.gz", "anat_max=9000",
+        "name=" + groupname, "contrast=" + contrast,
+        "min=1.7",
+        "max=4",
+        "parametric=true",
+        "overlay=/static/"
+        "{0}/analysis/{1}/{2}/mni/{3}/zstat1.nii.gz".format(
             exp_base, experiment, groupname, contrast)])
     return "viewer?" + link
 
