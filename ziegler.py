@@ -225,6 +225,7 @@ def cluster_csv_to_html(csv_file):
 
     df = df.reset_index()
     df["Peak"] += 1
+    df["Prob"] = df["Prob"].astype(int)
     html = df.to_html(index=False, classes=["table",
                                             "table-striped",
                                             "table-condensed"])
