@@ -216,7 +216,7 @@ def experiment(experiment):
 def cluster_csv_to_html(csv_file):
     """Read the csv file with peak information and generate an html table."""
     try:
-        df = pd.read_csv(str(csv_file), index_col="Peak")
+        df = pd.read_csv(str(csv_file)[1:], index_col="Peak")
     except IOError:
         return "<p>Could not read %s </p><br>" % csv_file
 
