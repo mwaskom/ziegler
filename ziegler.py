@@ -23,7 +23,6 @@ parser.add_argument("-external", action="store_true")
 parser.add_argument("-debug", action="store_true")
 args = parser.parse_args(sys.argv[1:])
 
-exp = lyman.gather_experiment_info(args.experiment)
 subjects = lyman.determine_subjects(args.subjects)
 exp_base = args.experiment
 
@@ -33,7 +32,7 @@ app = Flask(__name__)
 def basic_info(experiment=exp_base):
     """Basic information needed before any report options are set."""
     experiments = list_experiments()
-    exp = experiemnt_info(experiment)
+    exp = experiment_info(experiment)
 
     subjects_size = min(len(subjects), 10)
 
@@ -97,7 +96,7 @@ def list_experiments():
     return sorted(op.splitext(op.basename(e))[0] for e in experiments)
 
 
-def experiemnt_info(experiment):
+def experiment_info(experiment):
 
     parts = experiment.split("-")
     try:
@@ -106,7 +105,8 @@ def experiemnt_info(experiment):
         exp_base, = parts
         altmodel = None
 
-    return lyman.gather_experiment_info(exp_base, altmodel)
+    info = lyman.gather_experiment_info(exp_base, altmodel)
+    return info
 
 
 @app.route("/")
@@ -206,7 +206,7 @@ def viewer(experiment):
 @app.route("/<experiment>/experiment")
 def experiment(experiment):
     info = basic_info(experiment)
-    exp_string = pprint.pformat(experiemnt_info(experiment))
+    exp_string = pprint.pformat(experiment_info(experiment))
     return render_template("experiment.html",
                            experiment_parameters=exp_string,
                            **info)
@@ -216,7 +216,7 @@ def experiment(experiment):
 def cluster_csv_to_html(csv_file):
     """Read the csv file with peak information and generate an html table."""
     try:
-        df = pd.read_csv(str(csv_file), index_col="Peak")
+        df = pd.read_csv(str(csv_file)[1:], index_col="Peak")
     except IOError:
         return "<p>Could not read %s </p><br>" % csv_file
 
@@ -225,6 +225,7 @@ def cluster_csv_to_html(csv_file):
 
     df = df.reset_index()
     df["Peak"] += 1
+    df["Prob"] = df["Prob"].astype(int)
     html = df.to_html(index=False, classes=["table",
                                             "table-striped",
                                             "table-condensed"])
@@ -237,7 +238,7 @@ def cluster_csv_to_html(csv_file):
 def corrected_mni_viewer(contrast, experiment, groupname):
 
     link = "&".join([
-        "lut=Reds",
+        "lut=OrRd",
         "anat=/static/data/MNI152.nii.gz", "anat_max=9000",
         "name=" + groupname, "contrast=" + contrast,
         "overlay=/static/"
@@ -246,16 +247,33 @@ def corrected_mni_viewer(contrast, experiment, groupname):
     return "viewer?" + link
 
 
+@app.template_filter("uncorrected_mni_viewer")
+def uncorrected_mni_viewer(contrast, experiment, groupname):
+
+    link = "&".join([
+        "lut=warm",
+        "negative_lut=cool",
+        "anat=/static/data/MNI152.nii.gz", "anat_max=9000",
+        "name=" + groupname, "contrast=" + contrast,
+        "min=1.7",
+        "max=4",
+        "parametric=true",
+        "overlay=/static/"
+        "{0}/analysis/{1}/{2}/mni/{3}/zstat1.nii.gz".format(
+            exp_base, experiment, groupname, contrast)])
+    return "viewer?" + link
+
+
 @app.template_filter("subject_zstat_viewer")
 def subject_zstat_viewer(contrast, experiment, subj, space):
 
     if space == "mni":
-        anat = "/static/{0}/data/{1}/normalization/brain_warp.nii.gz".format(
-            exp_base, subj)
+        anat = ("/static/{0}/data/{1}/normalization/brain_warp.nii.gz"
+                .format(exp_base, subj))
         anat_max = "110"
     else:
-        anat = "/static/{0}/analysis/{1}/preproc/run_1/mean_func.nii.gz".format(
-            exp_base, subj)
+        anat = ("/static/{0}/analysis/{1}/{2}/preproc/run_1/mean_func.nii.gz"
+                .format(exp_base, experiment, subj))
         anat_max = "2500"
 
     link = "&".join([

@@ -19,7 +19,7 @@ div.selector {
   margin-top: 50px;
   margin-left: 15px;
   margin-bottom: 30px;
-  position: fixed;
+  position: absolute;
   background: #ffffff;
 
   }
