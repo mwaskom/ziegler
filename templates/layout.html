@@ -104,12 +104,13 @@
                 {% if any_preproc %}
                   <div class=selector_group>
                     <legend>Preprocessing</legend>
-                    <select multiple size=6 name=preproc id=preproc>
+                    <select multiple size=7 name=preproc id=preproc>
                       <option value=mc_target>Motion Correction Target</option>
                       <option value=realign>Realignment Parameters</option>
-                      <option value=artifacts>Artifact Detection</option>
                       <option value=brain_mask>Brain Mask</option>
+                      <option value=artifacts>Artifact Detection</option>
                       <option value=mean_func>Mean BOLD Intensity</option>
+                      <option value=spikes>Spike Detection</option>
                       <option value=coreg>Coregistration</option>
                     </select>
                     <button id="preproc-toggle" class="btn btn-all select-toggle">All</button>
