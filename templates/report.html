@@ -103,7 +103,7 @@
             <img src="{{ path }}/design_singular_values.png"><br>
           {% endif %}
           {% if "residuals" in model %}
-            <h5>Model Error</h5>
+            <h5>Model Error Variance</h5>
             <img src="{{ path }}/sigmasquareds.png"><br>
           {% endif %}
           {% if "r2s" in model %}
@@ -112,6 +112,10 @@
               <h6>{{ comp | capitalize }} model R squared</h6>
               <img src="{{ path }}/r2_{{ comp }}.png"><br>
             {% endfor %}
+          {% endif %}
+          {% if "tsnr" in model %}
+            <h5>Signal-to-Noise</h5>
+            <img src="{{ path }}/tsnr.png"><br>
           {% endif %}
           {% if "zstats" in model or "filter" in model %}
             {% for contrast in all_contrasts %}
