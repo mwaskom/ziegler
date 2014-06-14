@@ -147,6 +147,10 @@
           <h5>Main Model R Squared</h5>
           <img src="{{ path }}/r2_main.png"><br>
         {% endif %}
+        {% if "tsnr" in ffx %}
+          <h4>Signal-to-Nose</h4>
+          <img src="{{ path }}/tsnr.png"><br>
+        {% endif %}
         {% if "zstat" in ffx %}
           {% for contrast in contrasts %}
             {% set path = analysis_root ~ "ffx/" ~ ffxspace ~ "/smoothed/" ~ contrast %}
