@@ -194,12 +194,23 @@
                   <div class="selector_group">
                     <legend>Common Space</legend>
                     <select size=2 name=groupspace id=groupspace>
-                      <option name="groupspace" value="mni" selected>MNI</label>
-                      <option name="groupspace" value="fsaverage">FSaverage</label>
+                      <option name="groupspace" value="mni" selected>MNI</option>
+                      <option name="groupspace" value="fsaverage">FSaverage</option>
                     </select>
                   </div>
                 {% endif %}
 
+              </div>
+
+              <div class="selector_group">
+                <legend>Experiment Parameters</legend>
+                <select multiple size=4 name=params id=params>
+                  <option name="preproc" value="preproc">Preprocessing</option>
+                  <option name="model" value="model">Timeseries Model</option>
+                  <option name="ffx" value="ffx">Fixed Effects</option>
+                  <option name="group" value="group">Group</option>
+                </select>
+                <button id="params-toggle" class="btn btn-all select-toggle">All</button>
               </div>
 
               {% if any_contrasts %}
@@ -297,7 +308,7 @@
   }
   
   $(document).ready(function() {
-    {% for section in ["subjects", "anatomy", "preproc", "model", "ffx", "rois", "maps", "peaks", "contrasts"] %}
+    {% for section in ["subjects", "anatomy", "preproc", "model", "ffx", "rois", "maps", "peaks", "params", "contrasts"] %}
       $('#{{ section }}').multiselect({
         buttonWidth: '140px',
         buttonText: function(options) {

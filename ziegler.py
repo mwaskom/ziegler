@@ -1,6 +1,7 @@
 import os
 import sys
 import os.path as op
+import json
 import pprint
 from glob import glob
 import argparse
@@ -212,6 +213,14 @@ def experiment(experiment):
                            **info)
 
 
+@app.template_filter("render_exp_json")
+def render_exp_json(json_file):
+    with open(json_file[1:]) as fid:
+        params = json.load(fid)
+        params = pprint.pformat(params)
+        return r"<pre><code>{}</code></pre><br>".format(params)
+
+
 @app.template_filter("csv_to_html")
 def cluster_csv_to_html(csv_file):
     """Read the csv file with peak information and generate an html table."""
@@ -299,7 +308,7 @@ def thresh_neg(palette):
 def request_to_info(req, info):
     """Given a request multidict, populate the info dict."""
     keys = ["subjects", "anatomy", "preproc", "model", "ffx",
-            "rois", "maps", "peaks", "contrasts"]
+            "rois", "maps", "peaks", "params", "contrasts"]
     for key in keys:
         info[key] = req.getlist(key)
     info["ffxspace"] = req.get("ffxspace", "")

@@ -49,7 +49,7 @@
         {% endfor %}
       {% endif %}
 
-      {% if preproc %}
+      {% if preproc or "preproc" in params %}
         <h3>Preprocessing</h3>
 
         {% for run in runs %}
@@ -81,11 +81,15 @@
             <h5>Anatomical Coregistration</h3>
             <img src="{{ path }}/func2anat.png"><br>
           {% endif %}
+          {% if "preproc" in params %}
+            <h5>Experiment Parameters</h3>
+            {% filter render_exp_json %}{{ path }}/experiment_info.json{% endfilter %}
+          {% endif %}
         {% endfor %}
 
       {% endif %}
 
-      {% if model %}
+      {% if model or "model" in params %}
         <h3>Timeseries Model</h3>
         {% for run in runs %}
           {% set path = analysis_root ~ "model/smoothed/run_" ~ run %}
@@ -131,9 +135,13 @@
             {% endfor %}
           {% endif %}
         {% endfor %}
+        {% if "model" in params %}
+          <h5>Experiment Parameters</h3>
+          {% filter render_exp_json %}{{ path }}/experiment_info.json{% endfilter %}
+        {% endif %}
       {% endif %}
 
-      {% if ffx %}
+      {% if ffx or "ffx" in params%}
         <h3>Fixed Effects</h3>
         {% set path = analysis_root + "ffx/" ~ ffxspace ~ "/smoothed/" %}
         {% if "mask" in ffx %}
@@ -159,13 +167,17 @@
             <a href={{ contrast | subject_zstat_viewer(experiment, subj, ffxspace) }}><img src="{{ path }}/zstat1.png"></a>
           {% endfor %}
         {% endif %}
+        {% if "ffx" in params %}
+          <h5>Experiment Parameters</h3>
+          {% filter render_exp_json %}{{ path }}/experiment_info.json{% endfilter %}
+        {% endif %}
       {% endif %}
 
     {% endfor %}
 
     {% set group_root = url_for("static", filename=exp_base ~ "/analysis/" ~ experiment ~ "/" ~ groupname ~ "/" ~ groupspace ~ "/") %}
 
-    {% if maps or peaks %}
+    {% if maps or peaks or "group" in params %}
       <h2>Group Analysis ({{ groupname }})</h2>
       {% for contrast in contrasts %}
         {% set path = group_root ~ contrast %}
@@ -218,6 +230,10 @@
             <a href={{ imgfile }}><img width=800 src={{ imgfile }}></a>
             <br>
           {% endif %}
+        {% endif %}
+        {% if "group" in params %}
+          <h5>Experiment Parameters</h3>
+          {% filter render_exp_json %}{{ path }}/experiment_info.json{% endfilter %}
         {% endif %}
       {% endfor %}
     {% endif %}
