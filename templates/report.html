@@ -55,7 +55,7 @@
         {% for run in runs %}
           <h4>Run {{ run }}</h4>
 
-          {% set path = preproc_root ~ "run_" ~ run %}
+          {% set path = analysis_root ~ "preproc/run_" ~ run %}
           {% if "mc_target" in preproc %}
             <h5>Motion Correction Target</h3>
             <img src="{{ path }}/example_func.png"></a>
