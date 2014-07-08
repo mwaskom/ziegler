@@ -148,6 +148,9 @@ def generate_report(experiment):
             continue
         elif key == "groupname" and not hasgroup:
             continue
+        elif key == "smoothing" and not (form.getlist("model")
+                                         or form.getlist("ffx")):
+            continue
         elif key == "contrasts" and not (form.getlist("model")
                                          or form.getlist("ffx")
                                          or hasgroup):
@@ -312,6 +315,7 @@ def request_to_info(req, info):
     for key in keys:
         info[key] = req.getlist(key)
     info["ffxspace"] = req.get("ffxspace", "")
+    info["smoothing"] = req.get("smoothing", "")
     info["groupspace"] = req.get("groupspace", "")
     groupname = req.get("groupname", "group")
     info["groupname"] = groupname if groupname else "group"

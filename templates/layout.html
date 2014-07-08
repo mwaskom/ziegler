@@ -131,6 +131,13 @@
                     </select>
                     <button id="model-toggle" class="btn btn-all select-toggle">All</button>
                   </div>
+                  <div class="selector_group">
+                    <legend>Smoothing</legend>
+                    <select size=2 name=smoothing id=smoothing>
+                      <option name="smoothing" value="smoothed" selected>Smoothed</label>
+                      <option name="smoothing" value="unsmoothed">Unsmoothed</label>
+                    </select>
+                  </div>
                 {% endif %}
 
                 {% if any_ffx %}
@@ -323,7 +330,7 @@
 
     {% endfor %}
 
-    {% for section in ["ffxspace", "groupname", "groupspace"] %}
+    {% for section in ["smoothing", "ffxspace", "groupname", "groupspace"] %}
       $("#{{ section }}").multiselect({ buttonWidth: '200px' });
     {% endfor %}
 

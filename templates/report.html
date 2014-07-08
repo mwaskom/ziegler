@@ -92,7 +92,7 @@
       {% if model or "model" in params %}
         <h3>Timeseries Model</h3>
         {% for run in runs %}
-          {% set path = analysis_root ~ "model/smoothed/run_" ~ run %}
+          {% set path = analysis_root ~ "model/" ~ smoothing ~ "/run_" ~ run %}
           <h4>Run {{ run }}</h4>
           {% if "design_mat" in model %}
             <h5>Design Matrix</h5>
@@ -143,7 +143,7 @@
 
       {% if ffx or "ffx" in params%}
         <h3>Fixed Effects</h3>
-        {% set path = analysis_root + "ffx/" ~ ffxspace ~ "/smoothed/" %}
+        {% set path = analysis_root + "ffx/" ~ ffxspace ~ "/" ~ smoothing %}
         {% if "mask" in ffx %}
           <h4>Mask Overlap</h4>
           <img src="{{ path }}/mask_overlap.png"><br>
@@ -161,7 +161,7 @@
         {% endif %}
         {% if "zstat" in ffx %}
           {% for contrast in contrasts %}
-            {% set path = analysis_root ~ "ffx/" ~ ffxspace ~ "/smoothed/" ~ contrast %}
+            {% set path = analysis_root ~ "ffx/" ~ ffxspace ~ "/" ~ smoothing ~ "/" ~ contrast %}
             <br><h4>Contrast: {{ contrast }}</h4>
             <h5>Z-Stat Image</h5>
             <a href={{ contrast | subject_zstat_viewer(experiment, subj, ffxspace) }}><img src="{{ path }}/zstat1.png"></a>
