@@ -13,19 +13,21 @@
 
       {% if anatomy %}
         <h3>Anatomy</h3>
-        {% if "surfaces" in anatomy %}
-          <h4>Inflated Surfaces</h4>
-          <img width=395 src="{{ data_root }}/snapshots/lh.surface_lat.png">
-          <img width=395 src="{{ data_root }}/snapshots/lh.surface_med.png"><br>
-          <img width=395 src="{{ data_root }}/snapshots/rh.surface_lat.png">
-          <img width=395 src="{{ data_root }}/snapshots/rh.surface_med.png"><br>
+        {% if "white" in anatomy %}
+          <h4>White Surface</h4>
+          <img src="{{ data_root }}/snapshots/white_surface.png">
+        {% endif %}
+        {% if "pial" in anatomy %}
+          <h4>Pial Surface</h4>
+          <img src="{{ data_root }}/snapshots/pial_surface.png">
+        {% endif %}
+        {% if "inflated" in anatomy %}
+          <h4>Inflated Surface</h4>
+          <img src="{{ data_root }}/snapshots/inflated_surface.png">
         {% endif %}
         {% if "surfwarp" in anatomy %}
           <h4>Surface Normalization</h4>
-          <img width=395 src="{{ data_root }}/snapshots/lh.surf_warp_lat.png">
-          <img width=395 src="{{ data_root }}/snapshots/lh.surf_warp_med.png"><br>
-          <img width=395 src="{{ data_root }}/snapshots/rh.surf_warp_lat.png">
-          <img width=395 src="{{ data_root }}/snapshots/rh.surf_warp_med.png"><br>
+          <img src="{{ data_root }}/snapshots/surface_registration.png"><br>
         {% endif %}
         {% if "brainmask" in anatomy %}
           <h4>Freesurfer Volume</h4>
