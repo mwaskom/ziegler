@@ -286,7 +286,7 @@ def subject_zstat_viewer(contrast, experiment, subj, space):
     else:
         anat = ("/static/{0}/analysis/{1}/{2}/preproc/run_1/mean_func.nii.gz"
                 .format(exp_base, experiment, subj))
-        anat_max = "2500"
+        anat_max = "25000"
 
     link = "&".join([
         "lut=OrRd", "negative_lut=PuBu", "max=12", "parametric=true",
