@@ -161,14 +161,20 @@
           <h4>Signal-to-Noise</h4>
           <img src="{{ path }}/tsnr.png"><br>
         {% endif %}
-        {% if "zstat" in ffx %}
-          {% for contrast in contrasts %}
-            {% set path = analysis_root ~ "ffx/" ~ ffxspace ~ "/" ~ smoothing ~ "/" ~ contrast %}
-            <br><h4>Contrast: {{ contrast }}</h4>
-            <h5>Z-Stat Image</h5>
-            <a href={{ contrast | subject_zstat_viewer(experiment, subj, ffxspace) }}><img src="{{ path }}/zstat1.png"></a>
-          {% endfor %}
-        {% endif %}
+        {% for contrast in contrasts %}
+          {% if ("zstat" in ffx or "surf" in ffx) %}
+              {% set path = analysis_root ~ "ffx/" ~ ffxspace ~ "/" ~ smoothing ~ "/" ~ contrast %}
+              <br><h4>Contrast: {{ contrast }}</h4>
+              {% if "zstat" in ffx %}
+                <h5>Z-Stat Image</h5>
+                <a href={{ contrast | subject_zstat_viewer(experiment, subj, ffxspace) }}><img src="{{ path }}/zstat1.png"></a>
+              {% endif %}
+              {% if "surf" in ffx %}
+                <h5>Surface Projection</h5>
+                <img src="{{ path }}/zstat1_surf.png">
+              {% endif %}
+          {% endif %}
+        {% endfor %}
         {% if "ffx" in params %}
           <h5>Experiment Parameters</h3>
           {% filter render_exp_json %}{{ path }}/experiment_info.json{% endfilter %}
