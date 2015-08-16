@@ -232,7 +232,7 @@
         {% endif %}
         {% if groupspace == "fsaverage" %}
           <h3>Contrast: {{ contrast }}</h3>
-          {% if "zstat" in maps %}
+          {% if "threshzstat" in maps %}
             <h4>Z-Stat Image<h4>
             {% set imgfile = path ~ "/rh/osgm/zstat_threshold.png" %}
             <a href={{ imgfile }}><img width=800 src={{ imgfile }}></a>
