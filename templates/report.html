@@ -58,6 +58,11 @@
           <h4>Run {{ run }}</h4>
 
           {% set path = analysis_root ~ "preproc/run_" ~ run %}
+          {% if "unwarp" in preproc %}
+            <h5>Distortion Correction</h3>
+            <img src="{{ path }}/unwarping.png"></a>
+            <br>
+          {% endif %}
           {% if "mc_target" in preproc %}
             <h5>Motion Correction Target</h3>
             <img src="{{ path }}/example_func.png"></a>
